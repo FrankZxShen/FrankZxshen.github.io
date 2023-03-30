@@ -64,6 +64,133 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-VQA简单综述" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/" class="article-date">
+  <time datetime="2023-03-30T02:34:08.000Z" itemprop="datePublished">2023-03-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/">VQA简单综述</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#测试</p>
+<h1 id="这是一个简单的测试——一些VQA综述"><a href="#这是一个简单的测试——一些VQA综述" class="headerlink" title="这是一个简单的测试——一些VQA综述"></a>这是一个简单的测试——一些VQA综述</h1><h2 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h2><p>VL学习：图像字幕、<strong>视觉问答（VQA）</strong>、图像文字匹配</p>
+<p>新时代： 通过图像-文本对的预训练来学习视觉和语言的联合表征</p>
+<h2 id="2、3个阶段："><a href="#2、3个阶段：" class="headerlink" title="2、3个阶段："></a>2、3个阶段：</h2><p>1、2014-2018年，其间，专门的模型被设计用于不同的任务。无深度学习<br>2、2019-2021年，在此期间，通过使用有着高质量标签的VL数据集进行预训练，神经网络模型能够学习视觉和语言的联合表征。CNN+RNN <strong>多模态使用</strong><br>3、2021年CLIP的出现。此时研究人员寻求在更大的弱标签数据集上预训练VL模型，并通过VL预训练获得性能强大的基于零样本或少样本的视觉模型。<strong>统一架构探索</strong></p>
+<h3 id="A-图像说明"><a href="#A-图像说明" class="headerlink" title="A 图像说明"></a>A 图像说明</h3><p>全局CNN：全局CNN特征有一个明显的弱点，因为解码器不能像人类那样聚焦于图像的重要区域。为解决这个问题，引入了注意机制。<br>（2018）自底向上&#x2F;自顶向上（BUTD）</p>
+<h3 id="B-VQA"><a href="#B-VQA" class="headerlink" title="B VQA"></a>B VQA</h3><p>给定一个图像-问题对，视觉问答要求根据图像回答一个问题。大多数研究都将视觉问答视为一个基于预定义答案集的分类问题。<br>VQA 的总体目标是从图像中提取与问题相关的语义信息，从细微物体的<strong>检测</strong>到抽象场景的<strong>推理</strong>。</p>
+<h2 id="3、关于VQA的主流模型与方法"><a href="#3、关于VQA的主流模型与方法" class="headerlink" title="3、关于VQA的主流模型与方法"></a>3、关于VQA的主流模型与方法</h2><ul>
+<li>从问题中提取特征（LSTM, GRU，BERT）</li>
+<li>从图像中提取特征（VGGNet, ResNet, GoogLeNet, ImageNet）</li>
+<li>结合这些特征来生成一个答案（目前主要有基于<strong>分类</strong>和<strong>生成</strong>两种方法）</li>
+</ul>
+<h2 id="4、2021的主流方法"><a href="#4、2021的主流方法" class="headerlink" title="4、2021的主流方法"></a>4、2021的主流方法</h2><h4 id="CLIP"><a href="#CLIP" class="headerlink" title="CLIP"></a>CLIP</h4><p>核心：NLP supervision![[CLIP.jpg]]</p>
+<h4 id="DALL-E"><a href="#DALL-E" class="headerlink" title="DALL-E"></a>DALL-E</h4><p>核心：等下写</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/" data-id="clfuib9b20002l8vdajix75ia" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-2023.3.28 Latr论文思路+代码" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/03/29/2023.3.28%20Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF+%E4%BB%A3%E7%A0%81/" class="article-date">
+  <time datetime="2023-03-29T12:27:00.938Z" itemprop="datePublished">2023-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>![[Latr.png]]</p>
+<p>分为两个部分，第一个部分是预训练部分，仅训练具有文本和空格的语言模态（用的ocr数据集），这是一个只在文本上预先训练的语言模型。<br>接下来，将OCR token令牌边界框的空间嵌入与对文档的进一步布局感知预训练结合使用。</p>
+<p>正式训练过程：其实就是调很多包</p>
+<h2 id="1、introduction"><a href="#1、introduction" class="headerlink" title="1、introduction"></a>1、introduction</h2><p>基于场景文本的VQA任务（多模态体系结构），训练数据集（图像）：TextVQA，并记录相应的权重和偏差。</p>
+<p>Latr本质：一种用于做场景文本VQA的布局感知器，用于场景文本可视化问答（STVQA）</p>
+<p>优化：提高对OCR错误的鲁棒性，消除对外部物体检测器的需求。</p>
+<h2 id="2、引入一些包"><a href="#2、引入一些包" class="headerlink" title="2、引入一些包"></a>2、引入一些包</h2><h2 id="4、制作数据集"><a href="#4、制作数据集" class="headerlink" title="4、制作数据集"></a>4、制作数据集</h2><p>将输入预处理为给定的格式，然后将输入提供给模型，得到预处理的输入</p>
+<h3 id="encoding"><a href="#encoding" class="headerlink" title="encoding"></a>encoding</h3><p>其中<br>img has a shape:               torch.Size([3, 384, 500])<br>boxes has a shape:             torch.Size([512, 6])<br>tokenized_words has a shape:   torch.Size([512])<br>question has a shape:          torch.Size([512])<br>answer has a shape:            torch.Size([512])<br>id has a shape:                torch.Size([])</p>
+<h3 id="decoding"><a href="#decoding" class="headerlink" title="decoding"></a>decoding</h3><p>OCR decoding（1 cup 1 cup 1 cup 250 ml 1 cup 250 ml 1 cup 250 ml 1 cup 1 cup） +<br>Image decoding（被压扁了。。224*224） +<br>Question decoding（How big is the measuring cup? ）</p>
+<h3 id="给dataloader加载Collate-function"><a href="#给dataloader加载Collate-function" class="headerlink" title="给dataloader加载Collate function"></a>给dataloader加载Collate function</h3><h2 id="5、define-the-Datamodule"><a href="#5、define-the-Datamodule" class="headerlink" title="5、define the Datamodule"></a>5、define the Datamodule</h2><p>定义数据集参数，比如训练集、测试集、batch_size啥的</p>
+<h2 id="6、最终训练阶段"><a href="#6、最终训练阶段" class="headerlink" title="6、最终训练阶段"></a>6、最终训练阶段</h2><p>1、定义config文件<br>2、定义布局VQA训练的各种杂项参数：<br>输入：boxes、img、question、words ；比如学习率、激活函数、训练损失。。。<br>3、定义训练主函数<br>主要参数（max_step：50000，seed：42）<br>开始训练，保存模型位置”.&#x2F;latr&#x2F;models“</p>
+<p>ok，爆显了，3070真tm的垃圾，又爆显又爆内存，我不玩了</p>
+<p>什么时候有3090啊。。。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/03/29/2023.3.28%20Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF+%E4%BB%A3%E7%A0%81/" data-id="clfuib9ax0000l8vdh0ui22iw" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-2023.3.27 VQA综述测试" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/03/29/2023.3.27%20VQA%E7%BB%BC%E8%BF%B0%E6%B5%8B%E8%AF%95/" class="article-date">
+  <time datetime="2023-03-29T12:27:00.936Z" itemprop="datePublished">2023-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#测试</p>
+<h1 id="这是一个简单的测试——一些VQA综述"><a href="#这是一个简单的测试——一些VQA综述" class="headerlink" title="这是一个简单的测试——一些VQA综述"></a>这是一个简单的测试——一些VQA综述</h1><h2 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h2><p>VL学习：图像字幕、<strong>视觉问答（VQA）</strong>、图像文字匹配</p>
+<p>新时代： 通过图像-文本对的预训练来学习视觉和语言的联合表征</p>
+<h2 id="2、3个阶段："><a href="#2、3个阶段：" class="headerlink" title="2、3个阶段："></a>2、3个阶段：</h2><p>1、2014-2018年，其间，专门的模型被设计用于不同的任务。无深度学习<br>2、2019-2021年，在此期间，通过使用有着高质量标签的VL数据集进行预训练，神经网络模型能够学习视觉和语言的联合表征。CNN+RNN <strong>多模态使用</strong><br>3、2021年CLIP的出现。此时研究人员寻求在更大的弱标签数据集上预训练VL模型，并通过VL预训练获得性能强大的基于零样本或少样本的视觉模型。<strong>统一架构探索</strong></p>
+<h3 id="A-图像说明"><a href="#A-图像说明" class="headerlink" title="A 图像说明"></a>A 图像说明</h3><p>全局CNN：全局CNN特征有一个明显的弱点，因为解码器不能像人类那样聚焦于图像的重要区域。为解决这个问题，引入了注意机制。<br>（2018）自底向上&#x2F;自顶向上（BUTD）</p>
+<h3 id="B-VQA"><a href="#B-VQA" class="headerlink" title="B VQA"></a>B VQA</h3><p>给定一个图像-问题对，视觉问答要求根据图像回答一个问题。大多数研究都将视觉问答视为一个基于预定义答案集的分类问题。<br>VQA 的总体目标是从图像中提取与问题相关的语义信息，从细微物体的<strong>检测</strong>到抽象场景的<strong>推理</strong>。</p>
+<h2 id="3、关于VQA的主流模型与方法"><a href="#3、关于VQA的主流模型与方法" class="headerlink" title="3、关于VQA的主流模型与方法"></a>3、关于VQA的主流模型与方法</h2><ul>
+<li>从问题中提取特征（LSTM, GRU，BERT）</li>
+<li>从图像中提取特征（VGGNet, ResNet, GoogLeNet, ImageNet）</li>
+<li>结合这些特征来生成一个答案（目前主要有基于<strong>分类</strong>和<strong>生成</strong>两种方法）</li>
+</ul>
+<h2 id="4、2021的主流方法"><a href="#4、2021的主流方法" class="headerlink" title="4、2021的主流方法"></a>4、2021的主流方法</h2><h4 id="CLIP"><a href="#CLIP" class="headerlink" title="CLIP"></a>CLIP</h4><p>核心：NLP supervision![[CLIP.jpg]]</p>
+<h4 id="DALL-E"><a href="#DALL-E" class="headerlink" title="DALL-E"></a>DALL-E</h4><p>核心：等下写</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/03/29/2023.3.27%20VQA%E7%BB%BC%E8%BF%B0%E6%B5%8B%E8%AF%95/" data-id="clfuib9b20003l8vd4pcy1ndy" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/03/29/hello-world/" class="article-date">
@@ -103,7 +230,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/03/29/hello-world/" data-id="clft4ptzf0000z8vd7vq2fpr9" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/03/29/hello-world/" data-id="clfuib9b00001l8vd411k6v9q" class="article-share-link">Share</a>
       
       
     </footer>
@@ -142,6 +269,18 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/">VQA简单综述</a>
+          </li>
+        
+          <li>
+            <a href="/2023/03/29/2023.3.28%20Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF+%E4%BB%A3%E7%A0%81/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/03/29/2023.3.27%20VQA%E7%BB%BC%E8%BF%B0%E6%B5%8B%E8%AF%95/">(no title)</a>
+          </li>
         
           <li>
             <a href="/2023/03/29/hello-world/">Hello World</a>
