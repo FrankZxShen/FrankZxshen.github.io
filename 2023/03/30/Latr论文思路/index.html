@@ -5,17 +5,17 @@
   
 
   
-  <title>Hexo</title>
+  <title>Latr论文思路 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="![[Latr.png]] 分为两个部分，第一个部分是预训练部分，仅训练具有文本和空格的语言模态（用的ocr数据集），这是一个只在文本上预先训练的语言模型。接下来，将OCR token令牌边界框的空间嵌入与对文档的进一步布局感知预训练结合使用。 正式训练过程：其实就是调很多包 1、introduction基于场景文本的VQA任务（多模态体系结构），训练数据集（图像）：TextVQA，并记录相应的权">
+  <meta name="description" content="分为两个部分，第一个部分是预训练部分，仅训练具有文本和空格的语言模态（用的ocr数据集），这是一个只在文本上预先训练的语言模型。接下来，将OCR token令牌边界框的空间嵌入与对文档的进一步布局感知预训练结合使用。 正式训练过程：其实就是调很多包 1、introduction基于场景文本的VQA任务（多模态体系结构），训练数据集（图像）：TextVQA，并记录相应的权重和偏差。 Latr本质：一">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/2023/03/29/2023.3.28%20Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF+%E4%BB%A3%E7%A0%81/index.html">
+<meta property="og:title" content="Latr论文思路">
+<meta property="og:url" content="http://example.com/2023/03/30/Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="![[Latr.png]] 分为两个部分，第一个部分是预训练部分，仅训练具有文本和空格的语言模态（用的ocr数据集），这是一个只在文本上预先训练的语言模型。接下来，将OCR token令牌边界框的空间嵌入与对文档的进一步布局感知预训练结合使用。 正式训练过程：其实就是调很多包 1、introduction基于场景文本的VQA任务（多模态体系结构），训练数据集（图像）：TextVQA，并记录相应的权">
+<meta property="og:description" content="分为两个部分，第一个部分是预训练部分，仅训练具有文本和空格的语言模态（用的ocr数据集），这是一个只在文本上预先训练的语言模型。接下来，将OCR token令牌边界框的空间嵌入与对文档的进一步布局感知预训练结合使用。 正式训练过程：其实就是调很多包 1、introduction基于场景文本的VQA任务（多模态体系结构），训练数据集（图像）：TextVQA，并记录相应的权重和偏差。 Latr本质：一">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-03-29T12:27:00.938Z">
-<meta property="article:modified_time" content="2023-03-29T09:50:36.274Z">
+<meta property="article:published_time" content="2023-03-30T02:43:00.000Z">
+<meta property="article:modified_time" content="2023-03-30T02:43:20.241Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -66,20 +66,29 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-2023.3.28 Latr论文思路+代码" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Latr论文思路" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2023/03/29/2023.3.28%20Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF+%E4%BB%A3%E7%A0%81/" class="article-date">
-  <time datetime="2023-03-29T12:27:00.938Z" itemprop="datePublished">2023-03-29</time>
+    <a href="/2023/03/30/Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF/" class="article-date">
+  <time datetime="2023-03-30T02:43:00.000Z" itemprop="datePublished">2023-03-30</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Latr论文思路
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <p>![[Latr.png]]</p>
-<p>分为两个部分，第一个部分是预训练部分，仅训练具有文本和空格的语言模态（用的ocr数据集），这是一个只在文本上预先训练的语言模型。<br>接下来，将OCR token令牌边界框的空间嵌入与对文档的进一步布局感知预训练结合使用。</p>
+        <p>分为两个部分，第一个部分是预训练部分，仅训练具有文本和空格的语言模态（用的ocr数据集），这是一个只在文本上预先训练的语言模型。<br>接下来，将OCR token令牌边界框的空间嵌入与对文档的进一步布局感知预训练结合使用。</p>
 <p>正式训练过程：其实就是调很多包</p>
 <h2 id="1、introduction"><a href="#1、introduction" class="headerlink" title="1、introduction"></a>1、introduction</h2><p>基于场景文本的VQA任务（多模态体系结构），训练数据集（图像）：TextVQA，并记录相应的权重和偏差。</p>
 <p>Latr本质：一种用于做场景文本VQA的布局感知器，用于场景文本可视化问答（STVQA）</p>
@@ -95,7 +104,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/03/29/2023.3.28%20Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF+%E4%BB%A3%E7%A0%81/" data-id="clfuib9ax0000l8vdh0ui22iw" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/03/30/Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF/" data-id="clfuihqfp0000u4vd6ye87lnf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -104,19 +113,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          VQA简单综述
-        
-      </div>
-    </a>
   
-  
-    <a href="/2023/03/29/2023.3.27%20VQA%E7%BB%BC%E8%BF%B0%E6%B5%8B%E8%AF%95/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title"></div>
+      <div class="article-nav-title">VQA简单综述</div>
     </a>
   
 </nav>
@@ -153,19 +153,11 @@
       <ul>
         
           <li>
+            <a href="/2023/03/30/Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF/">Latr论文思路</a>
+          </li>
+        
+          <li>
             <a href="/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/">VQA简单综述</a>
-          </li>
-        
-          <li>
-            <a href="/2023/03/29/2023.3.28%20Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF+%E4%BB%A3%E7%A0%81/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2023/03/29/2023.3.27%20VQA%E7%BB%BC%E8%BF%B0%E6%B5%8B%E8%AF%95/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2023/03/29/hello-world/">Hello World</a>
           </li>
         
       </ul>
