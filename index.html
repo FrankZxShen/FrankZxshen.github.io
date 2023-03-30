@@ -1,248 +1,172 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-
-  
-  <title>Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://example.com/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Hexo',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2023-03-30 11:01:18'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
 
-<meta name="generator" content="Hexo 5.4.2"></head>
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
         
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-Latr论文思路" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/03/30/Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF/" class="article-date">
-  <time datetime="2023-03-30T02:43:00.000Z" itemprop="datePublished">2023-03-30</time>
-</a>
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/03/30/Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF/">Latr论文思路</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>分为两个部分，第一个部分是预训练部分，仅训练具有文本和空格的语言模态（用的ocr数据集），这是一个只在文本上预先训练的语言模型。<br>接下来，将OCR token令牌边界框的空间嵌入与对文档的进一步布局感知预训练结合使用。</p>
-<p>正式训练过程：其实就是调很多包</p>
-<h2 id="1、introduction"><a href="#1、introduction" class="headerlink" title="1、introduction"></a>1、introduction</h2><p>基于场景文本的VQA任务（多模态体系结构），训练数据集（图像）：TextVQA，并记录相应的权重和偏差。</p>
-<p>Latr本质：一种用于做场景文本VQA的布局感知器，用于场景文本可视化问答（STVQA）</p>
-<p>优化：提高对OCR错误的鲁棒性，消除对外部物体检测器的需求。</p>
-<h2 id="2、引入一些包"><a href="#2、引入一些包" class="headerlink" title="2、引入一些包"></a>2、引入一些包</h2><h2 id="4、制作数据集"><a href="#4、制作数据集" class="headerlink" title="4、制作数据集"></a>4、制作数据集</h2><p>将输入预处理为给定的格式，然后将输入提供给模型，得到预处理的输入</p>
-<h3 id="encoding"><a href="#encoding" class="headerlink" title="encoding"></a>encoding</h3><p>其中<br>img has a shape:               torch.Size([3, 384, 500])<br>boxes has a shape:             torch.Size([512, 6])<br>tokenized_words has a shape:   torch.Size([512])<br>question has a shape:          torch.Size([512])<br>answer has a shape:            torch.Size([512])<br>id has a shape:                torch.Size([])</p>
-<h3 id="decoding"><a href="#decoding" class="headerlink" title="decoding"></a>decoding</h3><p>OCR decoding（1 cup 1 cup 1 cup 250 ml 1 cup 250 ml 1 cup 250 ml 1 cup 1 cup） +<br>Image decoding（被压扁了。。224*224） +<br>Question decoding（How big is the measuring cup? ）</p>
-<h3 id="给dataloader加载Collate-function"><a href="#给dataloader加载Collate-function" class="headerlink" title="给dataloader加载Collate function"></a>给dataloader加载Collate function</h3><h2 id="5、define-the-Datamodule"><a href="#5、define-the-Datamodule" class="headerlink" title="5、define the Datamodule"></a>5、define the Datamodule</h2><p>定义数据集参数，比如训练集、测试集、batch_size啥的</p>
-<h2 id="6、最终训练阶段"><a href="#6、最终训练阶段" class="headerlink" title="6、最终训练阶段"></a>6、最终训练阶段</h2><p>1、定义config文件<br>2、定义布局VQA训练的各种杂项参数：<br>输入：boxes、img、question、words ；比如学习率、激活函数、训练损失。。。<br>3、定义训练主函数<br>主要参数（max_step：50000，seed：42）<br>开始训练，保存模型位置”.&#x2F;latr&#x2F;models“</p>
-<p>ok，爆显了，3070真tm的垃圾，又爆显又爆内存，我不玩了</p>
-<p>什么时候有3090啊。。。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/03/30/Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF/" data-id="clfuihqfp0000u4vd6ye87lnf" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-VQA简单综述" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/" class="article-date">
-  <time datetime="2023-03-30T02:34:08.000Z" itemprop="datePublished">2023-03-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/">VQA简单综述</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>#测试</p>
-<h1 id="这是一个简单的测试——一些VQA综述"><a href="#这是一个简单的测试——一些VQA综述" class="headerlink" title="这是一个简单的测试——一些VQA综述"></a>这是一个简单的测试——一些VQA综述</h1><h2 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h2><p>VL学习：图像字幕、<strong>视觉问答（VQA）</strong>、图像文字匹配</p>
-<p>新时代： 通过图像-文本对的预训练来学习视觉和语言的联合表征</p>
-<h2 id="2、3个阶段："><a href="#2、3个阶段：" class="headerlink" title="2、3个阶段："></a>2、3个阶段：</h2><p>1、2014-2018年，其间，专门的模型被设计用于不同的任务。无深度学习<br>2、2019-2021年，在此期间，通过使用有着高质量标签的VL数据集进行预训练，神经网络模型能够学习视觉和语言的联合表征。CNN+RNN <strong>多模态使用</strong><br>3、2021年CLIP的出现。此时研究人员寻求在更大的弱标签数据集上预训练VL模型，并通过VL预训练获得性能强大的基于零样本或少样本的视觉模型。<strong>统一架构探索</strong></p>
-<h3 id="A-图像说明"><a href="#A-图像说明" class="headerlink" title="A 图像说明"></a>A 图像说明</h3><p>全局CNN：全局CNN特征有一个明显的弱点，因为解码器不能像人类那样聚焦于图像的重要区域。为解决这个问题，引入了注意机制。<br>（2018）自底向上&#x2F;自顶向上（BUTD）</p>
-<h3 id="B-VQA"><a href="#B-VQA" class="headerlink" title="B VQA"></a>B VQA</h3><p>给定一个图像-问题对，视觉问答要求根据图像回答一个问题。大多数研究都将视觉问答视为一个基于预定义答案集的分类问题。<br>VQA 的总体目标是从图像中提取与问题相关的语义信息，从细微物体的<strong>检测</strong>到抽象场景的<strong>推理</strong>。</p>
-<h2 id="3、关于VQA的主流模型与方法"><a href="#3、关于VQA的主流模型与方法" class="headerlink" title="3、关于VQA的主流模型与方法"></a>3、关于VQA的主流模型与方法</h2><ul>
-<li>从问题中提取特征（LSTM, GRU，BERT）</li>
-<li>从图像中提取特征（VGGNet, ResNet, GoogLeNet, ImageNet）</li>
-<li>结合这些特征来生成一个答案（目前主要有基于<strong>分类</strong>和<strong>生成</strong>两种方法）</li>
-</ul>
-<h2 id="4、2021的主流方法"><a href="#4、2021的主流方法" class="headerlink" title="4、2021的主流方法"></a>4、2021的主流方法</h2><h4 id="CLIP"><a href="#CLIP" class="headerlink" title="CLIP"></a>CLIP</h4><p>核心：NLP supervision![[CLIP.jpg]]</p>
-<h4 id="DALL-E"><a href="#DALL-E" class="headerlink" title="DALL-E"></a>DALL-E</h4><p>核心：等下写</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/" data-id="clfuihqfs0001u4vdg5adexy8" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">March 2023</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/03/30/Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF/">Latr论文思路</a>
-          </li>
-        
-          <li>
-            <a href="/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/">VQA简单综述</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2023 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-  </div>
-</body>
-</html>
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Hexo"><span class="site-name">Hexo</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Hexo</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/03/30/Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF/" title="Latr论文思路">Latr论文思路</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-03-30T02:43:00.000Z" title="Created 2023-03-30 10:43:00">2023-03-30</time></span></div><div class="content">分为两个部分，第一个部分是预训练部分，仅训练具有文本和空格的语言模态（用的ocr数据集），这是一个只在文本上预先训练的语言模型。接下来，将OCR token令牌边界框的空间嵌入与对文档的进一步布局感知预训练结合使用。
+正式训练过程：其实就是调很多包
+1、introduction基于场景文本的VQA任务（多模态体系结构），训练数据集（图像）：TextVQA，并记录相应的权重和偏差。
+Latr本质：一种用于做场景文本VQA的布局感知器，用于场景文本可视化问答（STVQA）
+优化：提高对OCR错误的鲁棒性，消除对外部物体检测器的需求。
+2、引入一些包4、制作数据集将输入预处理为给定的格式，然后将输入提供给模型，得到预处理的输入
+encoding其中img has a shape:               torch.Size([3, 384, 500])boxes has a shape:             torch.Size([512, 6])tokenized_words has a shape:   torch.Size([512])question has a shape ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/" title="VQA简单综述">VQA简单综述</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-03-30T02:34:08.000Z" title="Created 2023-03-30 10:34:08">2023-03-30</time></span></div><div class="content">#测试
+这是一个简单的测试——一些VQA综述1、概述VL学习：图像字幕、视觉问答（VQA）、图像文字匹配
+新时代： 通过图像-文本对的预训练来学习视觉和语言的联合表征
+2、3个阶段：1、2014-2018年，其间，专门的模型被设计用于不同的任务。无深度学习2、2019-2021年，在此期间，通过使用有着高质量标签的VL数据集进行预训练，神经网络模型能够学习视觉和语言的联合表征。CNN+RNN 多模态使用3、2021年CLIP的出现。此时研究人员寻求在更大的弱标签数据集上预训练VL模型，并通过VL预训练获得性能强大的基于零样本或少样本的视觉模型。统一架构探索
+A 图像说明全局CNN：全局CNN特征有一个明显的弱点，因为解码器不能像人类那样聚焦于图像的重要区域。为解决这个问题，引入了注意机制。（2018）自底向上&#x2F;自顶向上（BUTD）
+B VQA给定一个图像-问题对，视觉问答要求根据图像回答一个问题。大多数研究都将视觉问答视为一个基于预定义答案集的分类问题。VQA 的总体目标是从图像中提取与问题相关的语义信息，从细微物体的检测到抽象场景的推理。
+3、关于VQA的主流模型与方法
+从 ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">John Doe</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/03/30/Latr%E8%AE%BA%E6%96%87%E6%80%9D%E8%B7%AF/" title="Latr论文思路">Latr论文思路</a><time datetime="2023-03-30T02:43:00.000Z" title="Created 2023-03-30 10:43:00">2023-03-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/03/30/VQA%E7%AE%80%E5%8D%95%E7%BB%BC%E8%BF%B0/" title="VQA简单综述">VQA简单综述</a><time datetime="2023-03-30T02:34:08.000Z" title="Created 2023-03-30 10:34:08">2023-03-30</time></div></div></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/03/"><span class="card-archive-list-date">March 2023</span><span class="card-archive-list-count">2</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">2</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Push :</div><div class="item-count" id="last-push-date" data-lastPushDate="2023-03-30T03:01:18.890Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By John Doe</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
