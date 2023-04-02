@@ -75,6 +75,32 @@ cover: url(/img/stvqa.png)
 
 
 
+## M4C: Iterative Answer Prediction with Pointer-Augmented Multimodal Transformers for TextVQA
+
+多模态transformer对TextVQA进行迭代式答案预测
+
+当前的数据集和方法大多集中在场景中的视觉成分上，但是往往忽略一个关键的模态：图像中的文本，它继承着对场景理解和推断的重要信息（比如洗手间中的“小心地滑”告示牌）。提出TextVQA数据集。
+
+**TextVQA任务：**模型可以看到、阅读和推理三种模态。对于以前的工作，基于单纯词嵌入的图像文本特征表示能力有限，且容易错过重要的线索。比如文本的token的外观和位置layout（latr解决）
+
+**本文的模态多拷贝网（M4C）模型：**
+
+![](/img/M4C1.png)
+
+给定一个问题和一张图片作为输入，从三种模态提取特征表示：问题、图片中的视觉特征（用的FasterRCNN）、图片中的文字。这三种模态分别表示为**问题词特征列表**、**来自现成的目标检测器的视觉目标特征列表**、**基于外部OCR系统的OCR token特征列表**。
+
+通过特定领域的嵌入方法将所有实体（问题词、检测到的视觉对象和检测到的OCR token）投射到一个共同的d维语义空间，并在投射的事物列表上应用多个transformer层。基于transformer的输出，我们通过迭代的自回归解码来预测答案，在每一步，我们的模型要么通过动态指针网络选择一个OCR token，要么从其固定的答案单词表中选择一个词。
+
+### 本文的贡献
+
+1、提出一种基于多模态Transformer和指针网络的文本视觉问答（TextVQA）方法，将文本、图像和回答进行联合建模。
+
+2、提出一种迭代答案预测方法，采用指针试多步解码器进行预测。可以保持准确性的同时提高生成答案的多样性。
+
+3、在几个TextVQA数据集上进行了广泛的实验，比较好。（至少下面这篇论文采用了部分方法模型的encoder）
+
+
+
 ## TAP: Text-Aware Pre-training for Text-VQA and Text-Caption
 
 文本VQA和文本标题的文本感知预训练
@@ -93,6 +119,22 @@ cover: url(/img/stvqa.png)
 
 ### 模型结构
 
-#### 预训练结构
+#### 预训练结构（右边）
 
 （注：本文没有用VIT，这可能是个改进方向）
+
+3个embedding + 4层多模态编码器（Fusion Module）,encoder部分和上面论文一致。模型的输入包括**文本特征序列$$w$$、视觉对象序列$$v^{obj}$$、文字视觉特征序列（OCR）**$$v^{ocr}$$。
+
+其中**文本特征序列**$$w=[w^{q},w^{obj},w^{ocr}]$$，$$w^{q}$$表示问题或者图像描述的token序列，$$w^{obj}$$表示图像中用Faster R-CNN识别出来的对象的类别序列，$$w^{ocr}$$指的是通过OCR检测模型得到的图像中的文字序列。
+
+$$v^{obj}$$和是基于Faster-RCNN得到的bounding boxes抽取的**图像视觉特征序列**。
+
+$$v^{ocr}$$是基于OCR检测模型得到的**文字视觉特征序列**。
+
+文本特征序列$$w$$会先经过文本编码器得到token embedding，然后送入Fusion Module中，视觉特征序列 $$v^{obj}$$和 和$$v^{ocr}$$则分别经过一层全连接层，然后送入Fusion Module中。此外还有一个特殊的token <begin>（$$p_0$$）也会同时输入，用于预测图文是否匹配
+
+![](/img/TAP1.png)
+
+
+
+未完待续。。。
