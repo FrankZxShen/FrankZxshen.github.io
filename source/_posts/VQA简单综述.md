@@ -7,7 +7,7 @@ categories: 论文阅读
 cover: url(/img/ViLT.png)
 ---
 
-#测试
+#测试 hexo部署文章	https://blog.csdn.net/K1052176873/article/details/122879462
 
 # 这是一个简单的测试——一些VQA综述
 
