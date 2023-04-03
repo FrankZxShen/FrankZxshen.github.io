@@ -7,6 +7,18 @@ categories: 论文阅读
 cover: url(/img/stvqa.png)
 ---
 
+## 主要数据集
+
+### TextVQA
+
+2.8w图，4.5w问题
+
+### STVQA
+
+2.1w图，3.1w问题
+
+其他还是TextCaps（2.8w图，14w问题）做图像描述的
+
 ## Scene Text Visual Question Answering——ICCV2019
 
 做stvqa的始祖（其实可能是**OCR-VQA: Visual Question Answering by Reading Text in Images**）
@@ -81,7 +93,7 @@ cover: url(/img/stvqa.png)
 
 当前的数据集和方法大多集中在场景中的视觉成分上，但是往往忽略一个关键的模态：图像中的文本，它继承着对场景理解和推断的重要信息（比如洗手间中的“小心地滑”告示牌）。提出TextVQA数据集。
 
-**TextVQA任务：**模型可以看到、阅读和推理三种模态。对于以前的工作，基于单纯词嵌入的图像文本特征表示能力有限，且容易错过重要的线索。比如文本的token的外观和位置layout（latr解决）
+**TextVQA任务：**模型可以看到、阅读和推理三种模态。对于以前的工作，基于单纯词嵌入的图像文本特征表示能力有限，且容易错过重要的线索。比如文本的token的外观和位置layout（*latr解决*）
 
 **本文的模态多拷贝网（M4C）模型：**
 
@@ -111,7 +123,7 @@ cover: url(/img/stvqa.png)
 
 文本VQA（TextVQA：旨在**回答跟图像中文字相关的问题**，比如“what is the company name?”，此时输出答案是一个词或一个词组）
 
-文本标题任务（Text-Caption：旨在对一张图片生成一句直接覆盖了图像中所有文字信息描述（感觉有点像根据图片进行人为的推理啥的））
+文本标题任务（Text-Caption：旨在对一张图片生成一句直接覆盖了图像中所有文字信息描述（*感觉有点像根据图片进行人为的推理啥的*）
 
 ### 问题
 
@@ -121,20 +133,63 @@ cover: url(/img/stvqa.png)
 
 #### 预训练结构（右边）
 
-（注：本文没有用VIT，这可能是个改进方向）
+（*注：本文没有用VIT，这可能是个改进方向。但是你用T5和T5X这不全秒了？什么是Google的含金量啊！*）
 
-3个embedding + 4层多模态编码器（Fusion Module）,encoder部分和上面论文一致。模型的输入包括**文本特征序列$$w$$、视觉对象序列$$v^{obj}$$、文字视觉特征序列（OCR）**$$v^{ocr}$$。
+3个embedding + 4层多模态编码器（Fusion Module）,encoder部分和上面论文一致。模型的输入包括**文本特征序列**`w`、**视觉对象序列**`v^{obj}`、**文字视觉特征序列（OCR）**`v^{ocr}`。
 
-其中**文本特征序列**$$w=[w^{q},w^{obj},w^{ocr}]$$，$$w^{q}$$表示问题或者图像描述的token序列，$$w^{obj}$$表示图像中用Faster R-CNN识别出来的对象的类别序列，$$w^{ocr}$$指的是通过OCR检测模型得到的图像中的文字序列。
+其中**文本特征序列**`w=[w^{q},w^{obj},w^{ocr}]`，`w^{q}`表示问题或者图像描述的token序列，`w^{obj}`表示图像中用Faster R-CNN识别出来的对象的类别序列，`w^{ocr}`指的是通过OCR检测模型得到的图像中的文字序列。
 
-$$v^{obj}$$和是基于Faster-RCNN得到的bounding boxes抽取的**图像视觉特征序列**。
+`v^{obj}`和是基于Faster-RCNN得到的bounding boxes抽取的**图像视觉特征序列**。
 
-$$v^{ocr}$$是基于OCR检测模型得到的**文字视觉特征序列**。
+`v^{ocr}​`是基于OCR检测模型得到的**文字视觉特征序列**。
 
-文本特征序列$$w$$会先经过文本编码器得到token embedding，然后送入Fusion Module中，视觉特征序列 $$v^{obj}$$和 和$$v^{ocr}$$则分别经过一层全连接层，然后送入Fusion Module中。此外还有一个特殊的token <begin>（$$p_0$$）也会同时输入，用于预测图文是否匹配
+文本特征序列`w`会先经过文本编码器得到token embedding，然后送入Fusion Module中，视觉特征序列 `v^{obj}`和 和`v^{ocr}`则分别经过一层全连接层，然后送入Fusion Module中。此外还有一个特殊的token <begin>（`p_0`）也会同时输入，用于预测图文是否匹配。
+
+##### 预训练任务分为两个任务：
+
+1、**scene-text language pre-training tasks**
+
+图像中文字相关的涉及**视觉和文本**的多模态训练任务。作者用了**ITM**（image-text matching 图像文字匹配）以及**MLM**（masked language modeling 掩码语言模型），*这个东西其实和latr一样，它用的也是MLM。*常见的策略，这个可以不变（15%mask, 其中80%换成<mask>，10%换成一个随机的词，10%不做修改）。但是不同的是，**本文引入`w^{ocr}`作为文本序列的一部分**，这其实有点牵强，相当于增加了图像文字被mask的概率，这会使得模型更关注文字部分的信息。
+
+2、**Scene-text Visual Pre-training tasks**
+
+图像中文字相关但是仅涉及**视觉**的预训练任务。建模**图像中对象和图像中文字的空间关系**往往能帮助理解两者之间的语义关系，例如一本书的封面上方往往是书名而不是出版社。因此，本文提出了一个专门预测空间关系的任务**RPP**（relative position prediction）。在该任务中，随机选取多模态模型输出的一个视觉对象`f^{obj}_i`和文字视觉对象`f^{ocr}_i`，通过全连接层，预测两者之间的相对位置关系。（*这个。。。可以采用？也是用layout的*）相对位置关系类别在该任务的开始阶段采用2分类（即是否包含），之后拓展到12分类，包括on，cover，overlap， eight-way relative oriention和unrelated。
 
 ![](/img/TAP1.png)
+
+#### 下游任务（左边）
+
+对于两个下游任务（还是TextVQA与Text-Caption）采用了统一的模型结构M4C，encoder与预训练的一致，decoder采用了一个全连接层和一个指针网络（Pointer Network）（*我感觉可能用不上*），全连接层将特征映射到一个常用词词典上，后者将特征映射到对应图像包含文本的词典上，解决文字图像中的OOV（out-of-vocabulary）问题。两个任务采用一致的模型结构，但是需要注意的是，对于Text-Caption任务来说，输入是没有文本序列中的子序列`w^q`的，因此这部分在finetune和测试的时候都是空白。
+
+### 贡献+总结
+
+效果
+
+![](/img/TAP2.png)
+
+上面这张图是TextVQA的效果
+
+消融实验结果：
+
+OCR的`w^OCR`、RPP位置任务都能带来很好的提升；
+
+模型数量大、模型本体大对带来提升；
+
+
+
+针对特定的下游任务，提出了**特定的预训练任务**->好的效果；
+
+本文验证了即使是**小规模的数据**，也可以用同样的预训练任务来提升模型效果。
+
+
+
+## 补充：T5：Text-to-Text Transfer Transformer
+
+T5是一种基于Transformer框架的预训练模型，旨在将自然语言文本的各类任务转化为相同的文本到文本转化问题，包括文本分类、文本问答、文本生成、文本摘要翻译等等。
+
+需要考虑下gpt-3？
 
 
 
 未完待续。。。
+
