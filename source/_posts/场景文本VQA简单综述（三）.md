@@ -98,5 +98,80 @@ Latr主要由3个部分组成，首先，是一个只在文本上预先训练的
 
 ## BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders and Large Language Models
 
+(注：这个是传统vqa的，应该是现在最先进的模型，自带llm)
+
 BLIP-2：用冻结的图像编码器和大型语言模型进行语言-图像预训练的自举模型
+
+![](/img/blip-2.png)
+
+### 贡献
+
+1、开放性的多模态内容理解与生成，为未来与llm结合打下基础。
+
+2、以新的视角去看待vqa，引入llm，cv是传感器，llm是处理器
+
+3、相对友好的计算资源。。。指16*A100
+
+4、性能nb
+
+### 相关工作
+
+#### ViLBERT
+
+20年 ViLBERT和Uniter采用了Object-Text对来提升模型对图片的理解能力。Object的引入，不可避免的需要一个笨重的检测器，去检测各种框，使得图像模态显得比较笨重。而且检测器模型不可避免的会存在漏检的问题，可以参考后来Open-Vocabulary一些工作，比如ViLD。这一阶段，显然对图像的理解是多模态的重头戏，文本更多是辅助图像任务的理解。
+
+#### ViLT
+
+ViLT，ALBEF，VLMo，BLIP 等等都抛弃了检测器，彻底摆脱了CNN网络的舒服，全面拥抱Transformer，当然这也得益于本身ViT模型在CV领域的大放光彩，让两个模态的有机融合成为了可能。在这一阶段，文本模态感觉已经可以和图像模态平起平坐了。从在各项具体下游任务（VQA、VG、ITR）的实际表现上来说，已经比较令人满意了。但总感觉差点味道，就是复杂推理。比如VQA上的问题，大多数是简单的逻辑计算或识别，感觉还不够智能。
+
+#### BLIP2
+
+图像输入图像编码器（Image Encoder），得到文本（Text）在Q-Former（BERT初始化）里进行融合，最后输入llm模型。
+
+![](/img/blip-2-2.png)
+
+第一阶段从冻结的图像编码器中引导视觉语言表示学习。第二阶段从冻结的LLM中引导视觉到语言的生成学习，它支持零镜头指示的图像到文本生成。
+
+与之前的模型不同，大多关注vit和encoder有多牛逼，但是忽视result处理器的重要性。只有LLM模型，才能实现这一角色，统一起各个模态的信号，从一个宏观的角度去看待这个问题。
+
+```
+Powered by LLMs (e.g. OPT (Zhang et al., 2022), FlanT5 (Chung et al., 2022)), BLIP-2 can be prompted to perform zero-shot image-to-text generation that follows natural language instructions, which enables emerging capabilities such as visual knowledge reasoning, visual conversation, etc.
+```
+
+### 如何统一多模态表征（参考ALBEF）
+
+模型与ALBEF相似，不同的是**learned Query**的引入（左下方那个），可以看到这些Query通过Cross-Attention与图像的特征交互，通过Self-Attention与文本的特征交互。这样做的好处有两个：（1）这些Query是基于两种模态信息得到的；（2）无论多大的视觉Backbone，最后都是Query长度的特征输出，大大降低了计算量。比如在实际实验中，ViT-L/14的模型的输出的特征是257x1024的大小，最后也是32x768的Query特征。
+
+![](/img/blip-2-qformer.png)
+
+针对Q-Former的三个训练任务：Image-Text Contrastive Learning (ITC)，Image-grounded Text Generation (ITG)，Image-Text Matching (ITM)。（*补充一下：latr：掩码语言见面（MLM）*）其中 ITC 和 ITM 任务，与ALBEF中的实现类似，只不过图像特征改为了Query的特征，具体可以参考代码实现（ITC和ITM）。**这里比较特别的是ITG任务，与ALBEF中的MLM不同，这里改成了生成整句Text的任务，类似Captioning，具体代码实现ITG**。实际上，这几个任务都是以Query特征和文本特征作为输入得到的，只不过有不同的Mask组合，具体可以参考上图中的右图。
+
+第一阶段，模型训练由上述三个任务组成，主要完成**对于特征的提取和融合**，马上传入llm。
+
+
+
+第二阶段，将Query变成llm认识的样子。
+
+![](/img/blip-2-llm.png)
+
+(上)单纯基于解码器的（冻结的）LLM（OPT）；基于编码器-解码器的（冻结的）LLM（FlanT5），全连接层从Q-former的输出适应所选LLM输入的大小。
+
+1、比如前者Decoder（OPT）,采用Query作为输入，文本作为目标；
+
+2、后者Encoder-Decoder（FlanT5）：以Query和一句话的前半段作为输入，后半段作为目标。
+
+### 训练
+
+1. 训练数据方面：包含常见的 COCO，VG，SBU，CC3M，CC12M 以及 115M的LAION400M中的图片。采用了BLIP中的CapFilt方法来Bootstrapping训练数据。
+2. CV模型：选择了CLIP的ViT-L/14和ViT-G/14，特别的是，作者采用倒数第二层的特征作为输出。
+3. LLM模型：选择了OPT和FlanT5的一些不同规模的模型。
+4. 训练时，CV模型和LLM都是冻结的状态，并且参数都转为了FP16。这使得模型的计算量大幅度降低。主要训练的基于BERT-base初始化的Q-Former只有188M的参数量。
+5. 最大的模型，ViT-G/14和FlanT5-XXL，只需要16卡A100 40G，训练6+3天就可以完成。
+6. 所有的图片都被缩放到224x224的大小。
+
+
+
+（BLiP）未完待续。。。
+
+记得看看前面两篇论文的方法。
 
