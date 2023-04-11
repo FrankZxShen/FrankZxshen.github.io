@@ -1,0 +1,210 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>场景文本VQA简单综述（四） | FrankZxShen's Blog</title><meta name="author" content="FrankZxshen"><meta name="copyright" content="FrankZxshen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="相关基本概念补充Learned Query （from ChatGPT）学习查询(LQ)是一种用于图像检索任务的查询类型，从给定的图像或一组图像中学习查询。学习到的查询可用于从数据集中检索与输入图像具有类似视觉特征或属性的其他图像。 LQ通常使用深度神经网络实现。输入图像被馈送到一个网络，该网络学习图像的视觉特征的表示。然后使用学习到的表示来生成可用于检索任务的查询。查询可以是固定长度的向量，也可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="场景文本VQA简单综述（四）">
+<meta property="og:url" content="http://frankzxshen.github.io/post/35d15cf2.html">
+<meta property="og:site_name" content="FrankZxShen&#39;s Blog">
+<meta property="og:description" content="相关基本概念补充Learned Query （from ChatGPT）学习查询(LQ)是一种用于图像检索任务的查询类型，从给定的图像或一组图像中学习查询。学习到的查询可用于从数据集中检索与输入图像具有类似视觉特征或属性的其他图像。 LQ通常使用深度神经网络实现。输入图像被馈送到一个网络，该网络学习图像的视觉特征的表示。然后使用学习到的表示来生成可用于检索任务的查询。查询可以是固定长度的向量，也可">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://frankzxshen.github.io/img/fav_maho.png">
+<meta property="article:published_time" content="2023-04-11T09:34:40.000Z">
+<meta property="article:modified_time" content="2023-04-11T14:50:44.256Z">
+<meta property="article:author" content="FrankZxshen">
+<meta property="article:tag" content="场景VQA综述">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://frankzxshen.github.io/img/fav_maho.png"><link rel="shortcut icon" href="/img/fav_maho.png"><link rel="canonical" href="http://frankzxshen.github.io/post/35d15cf2.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '场景文本VQA简单综述（四）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-04-11 22:50:44'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+
+if (false) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/fav_maho.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background: url(/img/stvqa.png)"><nav id="nav"><span id="blog-info"><a href="/" title="FrankZxShen's Blog"><img class="site-icon" src="/img/fav_maho.png"/><span class="site-name">FrankZxShen's Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">场景文本VQA简单综述（四）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-04-11T09:34:40.000Z" title="发表于 2023-04-11 17:34:40">2023-04-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-04-11T14:50:44.256Z" title="更新于 2023-04-11 22:50:44">2023-04-11</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="相关基本概念补充"><a href="#相关基本概念补充" class="headerlink" title="相关基本概念补充"></a>相关基本概念补充</h2><h3 id="Learned-Query-（from-ChatGPT）"><a href="#Learned-Query-（from-ChatGPT）" class="headerlink" title="Learned Query （from ChatGPT）"></a>Learned Query （from ChatGPT）</h3><p>学习查询(LQ)是一种用于图像检索任务的查询类型，从给定的图像或一组图像中学习查询。学习到的查询可用于<strong>从数据集中检索与输入图像具有类似视觉特征或属性的其他图像</strong>。</p>
+<p>LQ通常使用深度神经网络实现。输入图像被馈送到一个网络，该网络<strong>学习图像的视觉特征</strong>的表示。然后使用学习到的表示来生成可用于检索任务的查询。查询可以是固定长度的向量，也可以是单词序列。</p>
+<p>LQ已被证明在各种图像检索任务中是有效的，包括基于内容的图像检索、图像字幕和视觉问题回答。</p>
+<h2 id="lmg2llm：From-Images-to-Textual-Prompts-Zero-shot-Visual-Question-Answering-with-Frozen-Large-Language-Models"><a href="#lmg2llm：From-Images-to-Textual-Prompts-Zero-shot-Visual-Question-Answering-with-Frozen-Large-Language-Models" class="headerlink" title="lmg2llm：From Images to Textual Prompts: Zero-shot Visual Question Answering with Frozen Large Language Models"></a>lmg2llm：From Images to Textual Prompts: Zero-shot Visual Question Answering with Frozen Large Language Models</h2><p>从图像到文本prompts：用冻结的llm进行zero-shot的vqa模型</p>
+<h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>大型语言模型（LLM）在新的语言任务中表现出了出色的零样本泛化能力。然而，有效利用LLM进行零样本视觉问题回答（VQA）仍然具有挑战性，主要是因为LLM和VQA任务之间的模态断开和任务断开。视觉和语言数据的端到端训练可能会弥合这种脱节，但缺乏灵活性，计算成本高昂。本<strong>文提出Img2Prompt，提供了可以桥接上述模态和任务断开的提示，这样LLM就可以执行零样本VQA任务，而无需进行端到端的训练</strong>。我们进一步采用LLMagnostic模型来提供能够描述图像内容的提示和自我构造的问答对，这可以有效地指导LLM执行零样本VQA任务。</p>
+<p>以下好处：1）它可以灵活地与各种LLM一起执行VQA。2） 无需端到端培训，它大大降低了为零样本VQA任务部署LLM的成本。3）  它实现了与依赖端到端训练的方法相当或更好的性能。例如，我们在VQAv2上的表现比Flamingo[3]好5.6%。在具有挑战性的A-OKVQA数据集上，我们的方法甚至比少镜头方法高出20%。</p>
+<p>本文的核心方法：<strong>利用视觉语言模型（比如BLIP？？？）和问题生成模型，并将其作为提示提供（Prompt）给llm。</strong></p>
+<h3 id="贡献"><a href="#贡献" class="headerlink" title="贡献"></a>贡献</h3><p>1、通过仅基于问题的当前图像生成合成问答对，将图像转换为文本提示。Img2Prompt能够弥合语言建模和视觉问答之间的模态脱节和任务脱节。</p>
+<p>2、Img2Prompt使LLM能够在<strong>无需昂贵的端到端培训或专门的VQA网络的情况下，离线用于零样本VQA任务。这样做可以降低模型部署成本</strong>，并提供LLM更新的灵活性。</p>
+<p>3、效果优于Flamingo。</p>
+<h3 id="之前的一些工作"><a href="#之前的一些工作" class="headerlink" title="之前的一些工作"></a>之前的一些工作</h3><p>文章表明，将llm应用与vqa任务很困难，一种常用的技术是与LLM[3，22，55]联合微调视觉编码器，这使视觉和语言表示空间对齐。但是成本巨高。</p>
+<p><strong>llm for zero&#x2F;few-shot vqa任务主要分为以下三种</strong></p>
+<h4 id="1、多模式预训练"><a href="#1、多模式预训练" class="headerlink" title="1、多模式预训练"></a>1、多模式预训练</h4><p>训练额外的对齐模块和language embedding。llm太大不好微调，只微调视觉编码器。例如Flamingo。缺点：（1）计算效率很低。（2）遗忘。如果LLM与视觉模型联合训练，则对齐步骤可能对LLM的推理能力不利。</p>
+<p><img src="/img/img2llm-1-1.png"></p>
+<h4 id="2、以语言作为中介的VQA"><a href="#2、以语言作为中介的VQA" class="headerlink" title="2、以语言作为中介的VQA"></a>2、以语言作为中介的VQA</h4><p>直接采用自然语言作为图像中间表示，不需要昂贵的训练。首先将图像转换为语言描述，将描述提供给llm。于零样本要求，它无法提供上下文内示例，也无法获得上下文内学习的好处。因此，它必须依靠特定于QA的LLM UnifiedQAv2[27]来实现高性能。</p>
+<p><img src="/img/img2llm-1-2.png"></p>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>给定一个图像和一个问题Q，从当前图像中生成合成问答对作为无正文示例。</p>
+<p><img src="/img/img2llm-1-3.png"></p>
+<h4 id="1、answer抽取"><a href="#1、answer抽取" class="headerlink" title="1、answer抽取"></a>1、answer抽取</h4><p>为了将图像内容纳入上下文学习的范例中，从当前的VQA图像中，我们首先寻找可以作为合成问题答案的单词。</p>
+<h4 id="2、问题生成"><a href="#2、问题生成" class="headerlink" title="2、问题生成"></a>2、问题生成</h4><p>利用提取的候选答案集{Şaj}Uj&#x3D;1，我们可以直接使用任何问题生成网络[2，24，28，37，63]来为每个候选答案生成特定的问题。在本文中，我们对基于模板的问题生成方法和神经问题生成方法进行了实验。</p>
+<h4 id="3、基于模板的问题生成"><a href="#3、基于模板的问题生成" class="headerlink" title="3、基于模板的问题生成"></a>3、基于模板的问题生成</h4><p>使用现成的解析器，我们获得每个答案的词性，并为每个POS类型设计特定的问题模板。例如，对于名词的答案，我们使用“这个图像中的对象是什么？”对于动词的答案，使用“在这个图像中采取了什么行动？”</p>
+<h4 id="4、神经问题生成"><a href="#4、神经问题生成" class="headerlink" title="4、神经问题生成"></a>4、神经问题生成</h4><p>我们在文本QA数据集上训练了一个神经问题生成模型。具体来说，我们对预先训练的T5大型模型[45]进行微调，以从答案中生成问题。模型的输入包含提示“Answer:[Answer].Context:[Context]”，其中[Answer]表示答案文本，[Context]表示来自文本QA数据集的上下文文本。在推理过程中，我们将[答案]替换为提取的候选答案，将[上下文]替换为从中提取答案的生成标题。该模型在五个文本QA数据集上进行了微调，包括SQuAD2.0[46]、MultiRC[26]、BookQA[43]、CommonsenseQA[53]和Social  IQA</p>
+<h4 id="5、与问题相关的标题提示"><a href="#5、与问题相关的标题提示" class="headerlink" title="5、与问题相关的标题提示"></a>5、与问题相关的标题提示</h4><p>为了解决这个问题（只关注船没有关注后面的风力涡轮机），我们生成了关于图像中与问题相关的部分的标题，并将其包含在LLM的提示中。 </p>
+<p>利用的方法是BLIP的Text Encoder（ITE）将的得到的相似性得分sim（v，q）分配给任意一对图像v和文本问题q。对于ITE，本文利用GradCAM[50]，一种特征属性可解释性技术，来生成粗定位图，突出显示给定问题的匹配图像区域[32]。简言之，GradCam通过ITE相似性函数sim（v，q）相对于交叉注意力得分的梯度来限定来自Transformer网络的交叉注意力得分。</p>
+<p><img src="/img/img2llm-2.png"></p>
+<h3 id="Prompt设计"><a href="#Prompt设计" class="headerlink" title="Prompt设计"></a>Prompt设计</h3><p>通过合成与问题相关的标题和问答对，我们通过连接指令、标题和QA示例来构建LLM的完整提示。说明文本为“请根据上下文对问题的答案进行推理”。标题提示的格式为<strong>“上下文：[所有标题]”“Contexts: [all captions]”</strong>。个别QA示例的格式为<strong>“问题：[问题]答案：[答案]“Question: [question]</strong><br><strong>Answer: [answer]” ”</strong>，并连接在一起。我们将当前问题定位为提示的最后一部分，格式为<strong>“question:[question].Answer:”</strong>。最后，为了得到答案，我们对LLM执行贪婪解码，并像Flamingo中那样删除无意义的令牌。</p>
+<p>优先blip2（效果更好）</p>
+<p>搭建一个简单的demo（img2llm+blip2）</p>
+<p>记得把最好是这篇论文代码的结构给理清楚+blip2</p>
+<p>未完待续。。。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://FrankZxshen.github.io">FrankZxshen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://frankzxshen.github.io/post/35d15cf2.html">http://frankzxshen.github.io/post/35d15cf2.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://FrankZxshen.github.io" target="_blank">FrankZxShen's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%9C%BA%E6%99%AFVQA%E7%BB%BC%E8%BF%B0/">场景VQA综述</a></div><div class="post_share"><div class="social-share" data-image="/img/fav_maho.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/post/72c16057.html" title="Latr论文思路（二）"><div class="cover" style="background: url(/img/latr.png)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Latr论文思路（二）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/7dabd01.html" title="场景文本VQA简单综述+可能的改进点"><div class="cover" style="background: url(/img/stvqa.png)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-31</div><div class="title">场景文本VQA简单综述+可能的改进点</div></div></a></div><div><a href="/post/82fc4597.html" title="场景文本VQA简单综述（三）"><div class="cover" style="background: url(/img/stvqa.png)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-07</div><div class="title">场景文本VQA简单综述（三）</div></div></a></div><div><a href="/post/cfe2e6c5.html" title="场景文本VQA简单综述（二）"><div class="cover" style="background: url(/img/stvqa.png)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-01</div><div class="title">场景文本VQA简单综述（二）</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/fav_maho.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">FrankZxshen</div><div class="author-info__description">今日は頑張ってますか（●´∀｀）ノ♡</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FrankZxShen"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">还在更新维护中...</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E8%A1%A5%E5%85%85"><span class="toc-number">1.</span> <span class="toc-text">相关基本概念补充</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Learned-Query-%EF%BC%88from-ChatGPT%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">Learned Query （from ChatGPT）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lmg2llm%EF%BC%9AFrom-Images-to-Textual-Prompts-Zero-shot-Visual-Question-Answering-with-Frozen-Large-Language-Models"><span class="toc-number">2.</span> <span class="toc-text">lmg2llm：From Images to Textual Prompts: Zero-shot Visual Question Answering with Frozen Large Language Models</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">2.1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A1%E7%8C%AE"><span class="toc-number">2.2.</span> <span class="toc-text">贡献</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%8B%E5%89%8D%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B7%A5%E4%BD%9C"><span class="toc-number">2.3.</span> <span class="toc-text">之前的一些工作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E5%A4%9A%E6%A8%A1%E5%BC%8F%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="toc-number">2.3.1.</span> <span class="toc-text">1、多模式预训练</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E4%BB%A5%E8%AF%AD%E8%A8%80%E4%BD%9C%E4%B8%BA%E4%B8%AD%E4%BB%8B%E7%9A%84VQA"><span class="toc-number">2.3.2.</span> <span class="toc-text">2、以语言作为中介的VQA</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">2.4.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81answer%E6%8A%BD%E5%8F%96"><span class="toc-number">2.4.1.</span> <span class="toc-text">1、answer抽取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E9%97%AE%E9%A2%98%E7%94%9F%E6%88%90"><span class="toc-number">2.4.2.</span> <span class="toc-text">2、问题生成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E5%9F%BA%E4%BA%8E%E6%A8%A1%E6%9D%BF%E7%9A%84%E9%97%AE%E9%A2%98%E7%94%9F%E6%88%90"><span class="toc-number">2.4.3.</span> <span class="toc-text">3、基于模板的问题生成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E7%A5%9E%E7%BB%8F%E9%97%AE%E9%A2%98%E7%94%9F%E6%88%90"><span class="toc-number">2.4.4.</span> <span class="toc-text">4、神经问题生成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5%E3%80%81%E4%B8%8E%E9%97%AE%E9%A2%98%E7%9B%B8%E5%85%B3%E7%9A%84%E6%A0%87%E9%A2%98%E6%8F%90%E7%A4%BA"><span class="toc-number">2.4.5.</span> <span class="toc-text">5、与问题相关的标题提示</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Prompt%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.5.</span> <span class="toc-text">Prompt设计</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/35d15cf2.html" title="场景文本VQA简单综述（四）"><div style="background: url(/img/stvqa.png)"></div></a><div class="content"><a class="title" href="/post/35d15cf2.html" title="场景文本VQA简单综述（四）">场景文本VQA简单综述（四）</a><time datetime="2023-04-11T09:34:40.000Z" title="发表于 2023-04-11 17:34:40">2023-04-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/72c16057.html" title="Latr论文思路（二）"><div style="background: url(/img/latr.png)"></div></a><div class="content"><a class="title" href="/post/72c16057.html" title="Latr论文思路（二）">Latr论文思路（二）</a><time datetime="2023-04-11T02:18:08.000Z" title="发表于 2023-04-11 10:18:08">2023-04-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/82fc4597.html" title="场景文本VQA简单综述（三）"><div style="background: url(/img/stvqa.png)"></div></a><div class="content"><a class="title" href="/post/82fc4597.html" title="场景文本VQA简单综述（三）">场景文本VQA简单综述（三）</a><time datetime="2023-04-07T07:36:19.000Z" title="发表于 2023-04-07 15:36:19">2023-04-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/b24f8d95.html" title="Efficientzero实验记录（一）">Efficientzero实验记录（一）</a><time datetime="2023-04-03T00:09:17.000Z" title="发表于 2023-04-03 08:09:17">2023-04-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/cfe2e6c5.html" title="场景文本VQA简单综述（二）"><div style="background: url(/img/stvqa.png)"></div></a><div class="content"><a class="title" href="/post/cfe2e6c5.html" title="场景文本VQA简单综述（二）">场景文本VQA简单综述（二）</a><time datetime="2023-04-01T04:10:22.000Z" title="发表于 2023-04-01 12:10:22">2023-04-01</time></div></div></div></div></div></div></main><footer id="footer" style="background: url(/img/stvqa.png)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By FrankZxshen</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div></div></body></html>
