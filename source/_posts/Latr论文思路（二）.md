@@ -1,9 +1,10 @@
 ---
 title: Latr论文思路（二）
-date: 2023-04-11 10:18:08
 tags: latr
 categories: 论文阅读
 cover: url(/img/latr.png)
+abbrlink: 72c16057
+date: 2023-04-11 10:18:08
 ---
 
 ## 补充
