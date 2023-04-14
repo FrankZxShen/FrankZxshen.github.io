@@ -1,9 +1,10 @@
 ---
 title: 场景文本VQA简单综述（五）
-date: 2023-04-12 09:54:29
 tags: 场景VQA综述
 categories: 论文阅读
 cover: url(/img/stvqa.png)
+abbrlink: 5a4f99b5
+date: 2023-04-12 09:54:29
 ---
 
 ## 相关基本概念补充
