@@ -1,9 +1,10 @@
 ---
 title: 场景文本VQA简单综述（六）
-date: 2023-04-13 19:31:09
 tags: 场景VQA综述
 categories: 论文阅读
 cover: url(/img/stvqa.png)
+abbrlink: 3f41d26c
+date: 2023-04-13 19:31:09
 ---
 
 ## 相关基本概念补充
@@ -92,10 +93,18 @@ answer candidates &  answer-aware
 
 ![](/img/prophet-2.png)
 
+#### stage-1 答案启发生成阶段
+
+我们介绍了两种类型的答案启发式：候选答案（answer candidates）和感知答案(answer-aware)的例子。给定由图像和问题组成的测试输入，候选答案（answer candidates）是指测试输入的有希望的答案列表，其中每个答案都与置信度分数相关联。感知答案(answer-aware)的例子指的是一个无正文的例子列表，其中每个例子对测试输入都有相似的答案。
+
+有趣的是，这两种类型的答案启发式可以从在基于知识的VQA任务上训练的任何普通VQA模型中同时获得。 **这里用的VQA模型是MCAN**。
 
 
 
 
-未完待续。回去回复和补充。
 
-明天补充一下。。。
+未完待续。
+
+主要任务：
+
+TAP能不能用？阅读预训练+微调流程+MCAN论文
