@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Lora:从代码分析 | FrankZxShen's Blog</title><meta name="author" content="FrankZxshen"><meta name="copyright" content="FrankZxshen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="什么是Lora技术？ https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2106.09685.pdf ​	在大型语言模型的传统微调中（当然，不只是大型语言模型），整个模型通常使用大量特定于任务的数据对新任务进行微调。这个过程在计算上可能很昂贵，并且需要大量内存，这可能是在资源受限的设备上进行实际部署的瓶颈。 ​	LoRA方法提出了一种低秩自适应技术，该技术在微调期间仅适应语言模型中的一部分参数，同时保持">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lora:从代码分析">
+<meta property="og:url" content="http://frankzxshen.github.io/post/e57dac46.html">
+<meta property="og:site_name" content="FrankZxShen&#39;s Blog">
+<meta property="og:description" content="什么是Lora技术？ https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2106.09685.pdf ​	在大型语言模型的传统微调中（当然，不只是大型语言模型），整个模型通常使用大量特定于任务的数据对新任务进行微调。这个过程在计算上可能很昂贵，并且需要大量内存，这可能是在资源受限的设备上进行实际部署的瓶颈。 ​	LoRA方法提出了一种低秩自适应技术，该技术在微调期间仅适应语言模型中的一部分参数，同时保持">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://frankzxshen.github.io/img/fav_maho.png">
+<meta property="article:published_time" content="2023-05-06T01:19:29.000Z">
+<meta property="article:modified_time" content="2023-05-06T14:52:16.078Z">
+<meta property="article:author" content="FrankZxshen">
+<meta property="article:tag" content="Lora">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://frankzxshen.github.io/img/fav_maho.png"><link rel="shortcut icon" href="/img/fav_maho.png"><link rel="canonical" href="http://frankzxshen.github.io/post/e57dac46.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Lora:从代码分析',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-05-06 22:52:16'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+
+if (false) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/fav_maho.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background: url(/img/Lora.png)"><nav id="nav"><span id="blog-info"><a href="/" title="FrankZxShen's Blog"><img class="site-icon" src="/img/fav_maho.png"/><span class="site-name">FrankZxShen's Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Lora:从代码分析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-05-06T01:19:29.000Z" title="发表于 2023-05-06 09:19:29">2023-05-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-06T14:52:16.078Z" title="更新于 2023-05-06 22:52:16">2023-05-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%A3%E7%A0%81%E9%98%85%E8%AF%BB/">代码阅读</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>什么是Lora技术？</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2106.09685.pdf">https://arxiv.org/pdf/2106.09685.pdf</a></p>
+<p>​	在大型语言模型的传统微调中（当然，不只是大型语言模型），整个模型通常使用大量特定于任务的数据对新任务进行微调。这个过程在计算上可能很昂贵，并且需要大量内存，这可能是在资源受限的设备上进行实际部署的瓶颈。</p>
+<p>​	LoRA方法提出了一种低秩自适应技术，该技术在微调期间仅适应语言模型中的一部分参数，同时保持其余参数不变。这降低了微调的计算成本和内存需求，同时保持了与传统微调相似的性能。</p>
+<p>​	该方法将语言模型中某一层的权重矩阵分解为低秩矩阵和残差矩阵。然后在微调期间调整低秩矩阵，而残差矩阵保持固定。这使模型能够使用更少的特定于任务的数据快速适应新任务。</p>
+<p><img src="/img/Lora.png"></p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>​	在模型的Linear层旁增加一个右边的分支，该分支将代替原有的参数矩阵$$W$$进行训练。例如在Transformer模型中，$$x$$可能是Embedding的输出，也可能是上一层Transformer layer的输出。</p>
+<p>​	比如一个输出维度d，我们将它传入右边的分支，Linear层A将数据从d维降到r（LoRA的秩，一般为2，4，8，16），再通过第二Linear层B将r变回d维。最后将左右两部分结果相加，得到下一个输出的h（隐藏状态）。</p>
+<p>​	对于左右两部分，右侧可以看作为左侧原有矩阵$$W$$的分解，将参数量从$$d<em>d$$维降维至$$d</em>r+d*r$$，由于r一般远远小于d，参数量就大幅度降低。<br>$$<br>h&#x3D;W_0x +\Delta{Wx}&#x3D;W_0x+BAx<br>$$<br>​	LoRA在训练过程中保留了原来的矩阵$$W$$，但是不让$$W$$参与训练，所以需要计算梯度的部分就只剩下旁支的A和B两个小矩阵。在加入LoRA前，模型优化表示为：<br>$$<br>max_{\Phi}\sum_{(x,y)\in Z}\sum_{t&#x3D;1}^{|y|}log(P_{\Phi}(y_{t}|x,y_{&lt;t})<br>$$<br>模型参数采用$$\Phi$$表示，优化表示为：<br>$$<br>max_{\Theta}\sum_{(x,y)\in Z}\sum_{t&#x3D;1}^{|y|}log(P\Phi_{0}+\Delta\Phi(\Theta)(y_{t}|x,y_{&lt;t})<br>$$<br>可以看到，对于LoRA，只需要训练后面的$$\Delta\Phi(\Theta)$$，不需要训练整体的$$P_{\Phi}$$。</p>
+<h3 id="代码部分"><a href="#代码部分" class="headerlink" title="代码部分"></a>代码部分</h3><p>最简单的方式：</p>
+<p>PEFT的LoRA实现：在PEFT实现LoRA时，将语言模型中Transformer层的权矩阵分解为低秩矩阵和残差矩阵。然后使用一小部分训练数据自适应微调低秩矩阵，而残差矩阵保持固定。这降低了微调过程的计算成本和内存需求，同时保持了与传统微调方法相似的性能。PEFT的LoRA实现还包括一种机制，用于在训练期间根据验证集上的性能动态调整低秩矩阵的秩。这使得模型能够适应任务的复杂性，并相应地调整低秩矩阵的秩。用于替换”q_proj”,<br>    “v_proj”。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># 设置超参数及配置</span><br><span class="line">LORA_R = 4 # LoRA秩</span><br><span class="line">LORA_ALPHA = 16 # </span><br><span class="line">LORA_DROPOUT = 0.05</span><br><span class="line">TARGET_MODULES = [</span><br><span class="line">    &quot;q_proj&quot;,</span><br><span class="line">    &quot;v_proj&quot;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">config = LoraConfig(</span><br><span class="line">    r=LORA_R,</span><br><span class="line">    lora_alpha=LORA_ALPHA,</span><br><span class="line">    target_modules=TARGET_MODULES,</span><br><span class="line">    lora_dropout=LORA_DROPOUT,</span><br><span class="line">    bias=&quot;none&quot;,</span><br><span class="line">    task_type=&quot;CAUSAL_LM&quot;,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"># 创建基础transformer模型</span><br><span class="line">model = AutoModelForSeq2SeqLM.from_pretrained(model_name_or_path)</span><br><span class="line"># 加入PEFT策略</span><br><span class="line">model = get_peft_model(model, config)</span><br></pre></td></tr></table></figure>
+
+<h4 id="loralib实现：layers-py"><a href="#loralib实现：layers-py" class="headerlink" title="loralib实现：layers.py"></a>loralib实现：layers.py</h4><p>LoRALayer()：定义基类，各种超参数定义，其中最重要的是r，LoRA的秩。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class LoRALayer():</span><br><span class="line">    def __init__(</span><br><span class="line">        self, </span><br><span class="line">        r: int, </span><br><span class="line">        lora_alpha: int, </span><br><span class="line">        lora_dropout: float,</span><br><span class="line">        merge_weights: bool,</span><br><span class="line">    ):</span><br><span class="line">        self.r = r</span><br><span class="line">        self.lora_alpha = lora_alpha</span><br><span class="line">        # Optional dropout</span><br><span class="line">        if lora_dropout &gt; 0.:</span><br><span class="line">            self.lora_dropout = nn.Dropout(p=lora_dropout)</span><br><span class="line">        else:</span><br><span class="line">            self.lora_dropout = lambda x: x</span><br><span class="line">        # Mark the weight as unmerged</span><br><span class="line">        self.merged = False</span><br><span class="line">        self.merge_weights = merge_weights</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Linear："><a href="#Linear：" class="headerlink" title="Linear："></a>Linear：</h5><p>用于替换nn.Linear()，继承上面的基类。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">class Linear(nn.Linear, LoraLayer):</span><br><span class="line">    # LoRA implemented in a dense layer</span><br><span class="line">    def __init__(</span><br><span class="line">        self, </span><br><span class="line">        in_features: int, </span><br><span class="line">        out_features: int, </span><br><span class="line">        r: int = 0, </span><br><span class="line">        lora_alpha: int = 1, </span><br><span class="line">        lora_dropout: float = 0.,</span><br><span class="line">        fan_in_fan_out: bool = False, # Set this to True if the layer to replace stores weight like (fan_in, fan_out)</span><br><span class="line">        merge_weights: bool = True,</span><br><span class="line">        **kwargs</span><br><span class="line">    ):</span><br><span class="line">        nn.Linear.__init__(self, in_features, out_features, **kwargs)</span><br><span class="line">        LoRALayer.__init__(self, r=r, lora_alpha=lora_alpha, lora_dropout=lora_dropout,</span><br><span class="line">                           merge_weights=merge_weights)</span><br><span class="line"></span><br><span class="line">        self.fan_in_fan_out = fan_in_fan_out</span><br><span class="line">        # Actual trainable parameters</span><br><span class="line">        if r &gt; 0:</span><br><span class="line">            self.lora_A = nn.Parameter(self.weight.new_zeros((r, in_features)))</span><br><span class="line">            self.lora_B = nn.Parameter(self.weight.new_zeros((out_features, r)))</span><br><span class="line">            self.scaling = self.lora_alpha / self.r</span><br><span class="line">            # Freezing the pre-trained weight matrix</span><br><span class="line">            self.weight.requires_grad = False</span><br><span class="line">        self.reset_parameters()</span><br><span class="line">        if fan_in_fan_out:</span><br><span class="line">            self.weight.data = self.weight.data.transpose(0, 1)     </span><br></pre></td></tr></table></figure>
+
+<p>参数初始化：</p>
+<p>lora_A采用kaiming初始化；lora_B采用零初始化，确保$$\Delta W&#x3D;BA$$值为0；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def reset_parameters(self):</span><br><span class="line">        nn.Linear.reset_parameters(self)</span><br><span class="line">        if hasattr(self, &#x27;lora_A&#x27;):</span><br><span class="line">            # initialize A the same way as the default for nn.Linear and B to zero</span><br><span class="line">            nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))</span><br><span class="line">            nn.init.zeros_(self.lora_B)</span><br></pre></td></tr></table></figure>
+
+<p>训练：</p>
+<p>设置mode&#x3D;True，这块作用是采用LoRA实现权重张量的合并；检测权重是否尚未合并。如果是，该方法减去矩阵自身的乘积；如果不是，则将添加矩阵自身的乘积。权重最后进行scaling的值缩放。前者消去了权值并更新了权值张量，后者合并了权值并更新了权值张量。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">def train(self, mode: bool = True):</span><br><span class="line">        def T(w):</span><br><span class="line">            return w.transpose(0, 1) if self.fan_in_fan_out else w</span><br><span class="line">        nn.Linear.train(self, mode)</span><br><span class="line">        if mode:</span><br><span class="line">            if self.merge_weights and self.merged:</span><br><span class="line">                # Make sure that the weights are not merged</span><br><span class="line">                if self.r &gt; 0:</span><br><span class="line">                    self.weight.data -= T(self.lora_B @ self.lora_A) * self.scaling</span><br><span class="line">                self.merged = False</span><br><span class="line">        else:</span><br><span class="line">            if self.merge_weights and not self.merged:</span><br><span class="line">                # Merge the weights and mark it</span><br><span class="line">                if self.r &gt; 0:</span><br><span class="line">                    self.weight.data += T(self.lora_B @ self.lora_A) * self.scaling</span><br><span class="line">                self.merged = True  </span><br></pre></td></tr></table></figure>
+
+<p>forward:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">def forward(self, x: torch.Tensor):</span><br><span class="line">        def T(w):</span><br><span class="line">            return w.transpose(0, 1) if self.fan_in_fan_out else w</span><br><span class="line">        if self.r &gt; 0 and not self.merged:</span><br><span class="line">            result = F.linear(x, T(self.weight), bias=self.bias)</span><br><span class="line">            if self.r &gt; 0:</span><br><span class="line">                result += (self.lora_dropout(x) @ self.lora_A.transpose(0, 1) @ self.lora_B.transpose(0, 1)) * self.scaling</span><br><span class="line">            return result</span><br><span class="line">        else:</span><br><span class="line">            return F.linear(x, T(self.weight), bias=self.bias)</span><br></pre></td></tr></table></figure>
+
+<p>使用方法（包括Conv2d，Conv1d）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># ===== Before =====</span><br><span class="line"># layer = nn.Linear(in_features, out_features)</span><br><span class="line"></span><br><span class="line"># ===== After ======</span><br><span class="line">import loralib as lora</span><br><span class="line"># Add a pair of low-rank adaptation matrices with rank r=16</span><br><span class="line">layer = lora.Linear(in_features, out_features, r=16)</span><br></pre></td></tr></table></figure>
+
+<p>什么意思呢？比如我们定义一个全连接层nn.Linear(200, 500)，输入一个矩阵[100, 200]，我们可以得到全连接层的输出[100, 500]，这时算法需要计算一个[100, 500] * [500, 200]的矩阵乘法和一个矩阵加法，计算复杂度为$$10^7(100<em>500</em>200)$$，当我们使用lora.Linear时，同样得到输出矩阵[100, 500]，lora计算矩阵[100, 200]与lora_A[200, 16]的乘积，得到矩阵[100, 16]，再与lora_B[16, 500]的乘积得到[100, 500]，但这时矩阵计算复杂度已经降到$$10^6(100<em>16</em>200+100<em>16</em>500)$$，当然，设置更小的r，计算复杂度将继续下降。</p>
+<h5 id="Conv2d："><a href="#Conv2d：" class="headerlink" title="Conv2d："></a>Conv2d：</h5><p>用于替换nn.Conv2d()</p>
+<p>首先我们来看一个传统的例子（<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42079689/article/details/102642610%EF%BC%89">https://blog.csdn.net/qq_42079689/article/details/102642610）</a></p>
+<p>例如输入输入四维向量[20, 16, 50, 100] #[N, C, H, W]</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conv2d = nn.Conv2d(in_channels=16,out_channels=64,kernel_size=3)</span><br></pre></td></tr></table></figure>
+
+<p>输出计算：<br>$$<br>out(N,C_{out})&#x3D;bias(C_{out})+\sum_{k&#x3D;0}^{C_{in}-1}weight(C_{out},k)*input(N,K)<br>$$<br>N为batch size，C为通道数量（灰度图为1），HW是高和宽；</p>
+<p>输出维度计算：<br>$$<br>[C, outchannels, \frac{H-K+2P}{S}+1,\frac{W-K+2P}{S}+1]<br>$$<br>K(ernel)&#x3D;3，P(adding)&#x3D;0，S(tride)&#x3D;0</p>
+<p>输出：[20, 64, 48, 98]</p>
+<p>Lora的方法与Linear相似，这里分析不同的部分：</p>
+<p>Lora_A变为了[r * kernel_size, in_channels * kernel_size]，Lora_B变为了[out_channels * kernel_size, r * kernel_size]</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">def __init__(</span><br><span class="line">        self, </span><br><span class="line">        in_channels: int, </span><br><span class="line">        out_channels: int,</span><br><span class="line">        kernel_size: int,</span><br><span class="line">        r: int = 0, </span><br><span class="line">        lora_alpha: int = 1, </span><br><span class="line">        lora_dropout: float = 0.,</span><br><span class="line">        merge_weights: bool = True,</span><br><span class="line">        **kwargs</span><br><span class="line">    ):</span><br><span class="line">        nn.Conv2d.__init__(self, in_channels, out_channels, kernel_size, **kwargs)</span><br><span class="line">        LoRALayer.__init__(self, r=r, lora_alpha=lora_alpha, lora_dropout=lora_dropout,</span><br><span class="line">                           merge_weights=merge_weights)</span><br><span class="line">        assert type(kernel_size) is int</span><br><span class="line">        # Actual trainable parameters</span><br><span class="line">        if r &gt; 0:</span><br><span class="line">            self.lora_A = nn.Parameter(</span><br><span class="line">                self.weight.new_zeros((r*kernel_size, in_channels*kernel_size))</span><br><span class="line">            )</span><br><span class="line">            self.lora_B = nn.Parameter(</span><br><span class="line">                self.weight.new_zeros((out_channels*kernel_size, r*kernel_size))</span><br><span class="line">            )</span><br><span class="line">            self.scaling = self.lora_alpha / self.r</span><br><span class="line">            # Freezing the pre-trained weight matrix</span><br><span class="line">            self.weight.requires_grad = False</span><br><span class="line">        self.reset_parameters()</span><br></pre></td></tr></table></figure>
+
+<p>在forward部分，以相同的方式改变weight进行传播。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">def forward(self, x: torch.Tensor):</span><br><span class="line">        if self.r &gt; 0 and not self.merged:</span><br><span class="line">            return F.conv2d(</span><br><span class="line">                x, </span><br><span class="line">                self.weight + (self.lora_B @ self.lora_A).view(self.weight.shape) * self.scaling,</span><br><span class="line">                self.bias, self.stride, self.padding, self.dilation, self.groups</span><br><span class="line">            )</span><br><span class="line">        return nn.Conv2d.forward(self, x)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="实验-amp-Conv1d："><a href="#实验-amp-Conv1d：" class="headerlink" title="实验&amp;Conv1d："></a>实验&amp;Conv1d：</h4><p>类似的，官方没有给出Conv1d的实现，但是很多词向量需要采用Conv1d来处理，我就在想Conv1d可以依葫芦画瓢？</p>
+<p>只是将Conv2d替换为Conv1d，采用以下代码进行测试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">import time</span><br><span class="line">import torch.nn as nn</span><br><span class="line">from loralib_tmp import lora_layers</span><br><span class="line">from memory_profiler import profile</span><br><span class="line"></span><br><span class="line">@profile</span><br><span class="line">def c2d():</span><br><span class="line">    time_start1 = time.time() </span><br><span class="line">    conv2d = nn.Conv2d(in_channels=16,out_channels=64,kernel_size=3)</span><br><span class="line">    input = torch.randn(20, 16, 50, 100)</span><br><span class="line">    conv2d(input)</span><br><span class="line"></span><br><span class="line">    time_end1 = time.time()  </span><br><span class="line">    time_sum1 = time_end1 - time_start1  </span><br><span class="line">    print(&#x27;Conv2d time:&#x27;,time_sum1)</span><br><span class="line"></span><br><span class="line">###################################################################################</span><br><span class="line">@profile</span><br><span class="line">def lc2d():</span><br><span class="line">    time_start2 = time.time()  </span><br><span class="line">    input = torch.randn(20, 16, 50, 100)</span><br><span class="line">    lora_conv2d = lora_layers.Conv2d(in_channels=16,out_channels=64,kernel_size=3, r=4)</span><br><span class="line">    lora_conv2d(input)</span><br><span class="line"></span><br><span class="line">    time_end2 = time.time() </span><br><span class="line">    time_sum2 = time_end2 - time_start2  </span><br><span class="line">    print(&#x27;lora_Conv2d time:&#x27;,time_sum2)</span><br><span class="line"></span><br><span class="line">####################################################################################</span><br><span class="line">@profile</span><br><span class="line">def c1d():</span><br><span class="line">    time_start3 = time.time()   </span><br><span class="line">    conv1d = nn.Conv1d(16, 33, 3)</span><br><span class="line">    input2 = torch.randn(20, 16, 50)</span><br><span class="line">    conv1d(input2)</span><br><span class="line">    time_end3 = time.time()  </span><br><span class="line">    time_sum3 = time_end3 - time_start3  </span><br><span class="line">    print(&#x27;Conv1d time:&#x27;,time_sum3)</span><br><span class="line"></span><br><span class="line">#####################################################################################</span><br><span class="line">@profile</span><br><span class="line">def lc1d():</span><br><span class="line">    time_start4 = time.time()  </span><br><span class="line">    input2 = torch.randn(20, 16, 50)</span><br><span class="line">    lora_conv1d = lora_layers.Conv1d(16, 33, 3)</span><br><span class="line">    lora_conv1d(input2)</span><br><span class="line"></span><br><span class="line">    time_end4 = time.time() </span><br><span class="line">    time_sum4 = time_end4 - time_start4  </span><br><span class="line">    print(&#x27;lora_Conv1d time:&#x27;,time_sum4)</span><br><span class="line"></span><br><span class="line">#####################################################################################</span><br><span class="line">@profile</span><br><span class="line">def lin():</span><br><span class="line">    time_start5 = time.time()  </span><br><span class="line">    input3 = torch.randn(100, 200)</span><br><span class="line">    linear = nn.Linear(200, 500)</span><br><span class="line">    linear(input3)</span><br><span class="line"></span><br><span class="line">    time_end5 = time.time() </span><br><span class="line">    time_sum5 = time_end5 - time_start5  </span><br><span class="line">    print(&#x27;Linear time:&#x27;,time_sum5)</span><br><span class="line"></span><br><span class="line">#####################################################################################</span><br><span class="line">@profile</span><br><span class="line">def llin():</span><br><span class="line">    time_start6 = time.time()  </span><br><span class="line">    input3 = torch.randn(100, 200)</span><br><span class="line">    lora_linear = lora_layers.Linear(200, 500)</span><br><span class="line">    lora_linear(input3)</span><br><span class="line">    time_end6 = time.time() </span><br><span class="line">    time_sum6 = time_end6 - time_start6  </span><br><span class="line">    print(&#x27;lora_Linear time:&#x27;,time_sum6)</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    c1d()</span><br><span class="line">    lc1d()</span><br><span class="line">    c2d()</span><br><span class="line">    lc2d()</span><br><span class="line">    lin()</span><br><span class="line">    llin()</span><br></pre></td></tr></table></figure>
+
+
+
+<p>实验结果：</p>
+<h5 id="Line-Mem-usage-Increment-Occurrences-Line-Contents"><a href="#Line-Mem-usage-Increment-Occurrences-Line-Contents" class="headerlink" title="Line #    Mem usage    Increment  Occurrences   Line Contents"></a>Line #    Mem usage    Increment  Occurrences   Line Contents</h5><pre><code>31    110.2 MiB    110.2 MiB           1   @profile
+32                                         def c1d():
+33    110.2 MiB      0.0 MiB           1       time_start3 = time.time()
+34    110.7 MiB      0.5 MiB           1       conv1d = nn.Conv1d(16, 33, 3)
+35    110.8 MiB      0.2 MiB           1       input2 = torch.randn(20, 16, 50)
+36    112.9 MiB      2.1 MiB           1       conv1d(input2)
+37    112.9 MiB      0.0 MiB           1       time_end3 = time.time()
+38    112.9 MiB      0.0 MiB           1       time_sum3 = time_end3 - time_start3
+39    112.9 MiB      0.0 MiB           1       print(&#39;Conv1d time:&#39;,time_sum3)
+</code></pre>
+<p>lora_Conv1d time: 0.0013039112091064453</p>
+<pre><code>42    112.9 MiB    112.9 MiB           1   @profile
+43                                         def lc1d():
+44    112.9 MiB      0.0 MiB           1       time_start4 = time.time()
+45    112.9 MiB      0.0 MiB           1       input2 = torch.randn(20, 16, 50)
+46    112.9 MiB      0.0 MiB           1       lora_conv1d = lora_layers.Conv1d(16, 33, 3)
+47    112.9 MiB      0.0 MiB           1       lora_conv1d(input2)
+48
+49    112.9 MiB      0.0 MiB           1       time_end4 = time.time()
+50    112.9 MiB      0.0 MiB           1       time_sum4 = time_end4 - time_start4
+51    112.9 MiB      0.0 MiB           1       print(&#39;lora_Conv1d time:&#39;,time_sum4)
+</code></pre>
+<p>Conv2d time: 0.041425228118896484</p>
+<pre><code> 7    112.9 MiB    112.9 MiB           1   @profile
+ 8                                         def c2d():
+ 9    112.9 MiB      0.0 MiB           1       time_start1 = time.time()
+10    112.9 MiB      0.0 MiB           1       conv2d = nn.Conv2d(in_channels=16,out_channels=64,kernel_size=3)
+11    119.0 MiB      6.1 MiB           1       input = torch.randn(20, 16, 50, 100)
+12    119.1 MiB      0.1 MiB           1       conv2d(input)
+13
+14    119.1 MiB      0.0 MiB           1       time_end1 = time.time()
+15    119.1 MiB      0.0 MiB           1       time_sum1 = time_end1 - time_start1
+16    119.1 MiB      0.0 MiB           1       print(&#39;Conv2d time:&#39;,time_sum1)
+</code></pre>
+<p>lora_Conv2d time: 0.032353878021240234</p>
+<pre><code>19    113.0 MiB    113.0 MiB           1   @profile
+20                                         def lc2d():
+21    113.0 MiB      0.0 MiB           1       time_start2 = time.time()
+22    119.1 MiB      6.1 MiB           1       input = torch.randn(20, 16, 50, 100)
+23    119.3 MiB      0.1 MiB           1       lora_conv2d = lora_layers.Conv2d(in_channels=16,out_channels=64,kernel_size=3, r=4)
+24    120.0 MiB      0.0 MiB           1       lora_conv2d(input)
+25
+26    120.0 MiB      0.0 MiB           1       time_end2 = time.time()
+27    120.0 MiB      0.0 MiB           1       time_sum2 = time_end2 - time_start2
+28    120.0 MiB      0.0 MiB           1       print(&#39;lora_Conv2d time:&#39;,time_sum2)
+</code></pre>
+<p>Linear time: 0.0029897689819335938</p>
+<pre><code>54    113.9 MiB    113.9 MiB           1   @profile
+55                                         def lin():
+56    113.9 MiB      0.0 MiB           1       time_start5 = time.time()
+57    113.9 MiB      0.0 MiB           1       input3 = torch.randn(100, 200)
+58    114.3 MiB      0.4 MiB           1       linear = nn.Linear(200, 500)
+59    114.9 MiB      0.6 MiB           1       linear(input3)
+60
+61    114.9 MiB      0.0 MiB           1       time_end5 = time.time()
+62    114.9 MiB      0.0 MiB           1       time_sum5 = time_end5 - time_start5  
+63    114.9 MiB      0.0 MiB           1       print(&#39;Linear time:&#39;,time_sum5)
+</code></pre>
+<p>lora_Linear time: 0.001997709274291992</p>
+<pre><code>66    114.9 MiB    114.9 MiB           1   @profile
+67                                         def llin():
+68    114.9 MiB      0.0 MiB           1       time_start6 = time.time()
+69    114.9 MiB      0.0 MiB           1       input3 = torch.randn(100, 200)
+70    114.9 MiB      0.0 MiB           1       lora_linear = lora_layers.Linear(200, 500)
+71    114.9 MiB      0.0 MiB           1       lora_linear(input3)
+72 
+</code></pre>
+<p>不出所料</p>
+<p>还真的可以降低计算成本，内存消耗。</p>
+<p>接下来就是实战，比如alpaca-lora、某些基于Transformer的模型。尝试采用LoRA降低大模型训练成本。</p>
+<p>未完待续。。。</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2106.09685.pdf">https://arxiv.org/pdf/2106.09685.pdf</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/microsoft/LoRA/">https://github.com/microsoft/LoRA/</a></p>
+<p><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Conv1d.html">https://pytorch.org/docs/stable/generated/torch.nn.Conv1d.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html">https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012193416/article/details/129427242">https://blog.csdn.net/u012193416/article/details/129427242</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/emphmeral/article/details/129184347">https://blog.csdn.net/emphmeral/article/details/129184347</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44826203/article/details/129733930">https://blog.csdn.net/weixin_44826203/article/details/129733930</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://FrankZxshen.github.io">FrankZxshen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://frankzxshen.github.io/post/e57dac46.html">http://frankzxshen.github.io/post/e57dac46.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://FrankZxshen.github.io" target="_blank">FrankZxShen's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Lora/">Lora</a></div><div class="post_share"><div class="social-share" data-image="/img/fav_maho.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/post/54f622a3.html" title="gradio参数"><div class="cover" style="background: url(/img/Pandora.jpg)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">gradio参数</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/fav_maho.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">FrankZxshen</div><div class="author-info__description">今日は頑張ってますか（●´∀｀）ノ♡</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/FrankZxShen"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">还在更新维护中...</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%83%A8%E5%88%86"><span class="toc-number">2.</span> <span class="toc-text">代码部分</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#loralib%E5%AE%9E%E7%8E%B0%EF%BC%9Alayers-py"><span class="toc-number">2.1.</span> <span class="toc-text">loralib实现：layers.py</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Linear%EF%BC%9A"><span class="toc-number">2.1.1.</span> <span class="toc-text">Linear：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Conv2d%EF%BC%9A"><span class="toc-number">2.1.2.</span> <span class="toc-text">Conv2d：</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C-amp-Conv1d%EF%BC%9A"><span class="toc-number">2.2.</span> <span class="toc-text">实验&amp;Conv1d：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Line-Mem-usage-Increment-Occurrences-Line-Contents"><span class="toc-number">2.2.1.</span> <span class="toc-text">Line #    Mem usage    Increment  Occurrences   Line Contents</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/e57dac46.html" title="Lora:从代码分析"><div style="background: url(/img/Lora.png)"></div></a><div class="content"><a class="title" href="/post/e57dac46.html" title="Lora:从代码分析">Lora:从代码分析</a><time datetime="2023-05-06T01:19:29.000Z" title="发表于 2023-05-06 09:19:29">2023-05-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/54f622a3.html" title="gradio参数"><div style="background: url(/img/Pandora.jpg)"></div></a><div class="content"><a class="title" href="/post/54f622a3.html" title="gradio参数">gradio参数</a><time datetime="2023-04-22T08:20:10.000Z" title="发表于 2023-04-22 16:20:10">2023-04-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/84d956af.html" title="关于prompt的一些参数"><div style="background: url(/img/Pandora.jpg)"></div></a><div class="content"><a class="title" href="/post/84d956af.html" title="关于prompt的一些参数">关于prompt的一些参数</a><time datetime="2023-04-21T08:51:12.000Z" title="发表于 2023-04-21 16:51:12">2023-04-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/468cc499.html" title="场景文本VQA代码遇到的问题（一）"><div style="background: url(/img/Pandora.jpg)"></div></a><div class="content"><a class="title" href="/post/468cc499.html" title="场景文本VQA代码遇到的问题（一）">场景文本VQA代码遇到的问题（一）</a><time datetime="2023-04-19T11:34:40.000Z" title="发表于 2023-04-19 19:34:40">2023-04-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/3f41d26c.html" title="场景文本VQA简单综述（六）"><div style="background: url(/img/stvqa.png)"></div></a><div class="content"><a class="title" href="/post/3f41d26c.html" title="场景文本VQA简单综述（六）">场景文本VQA简单综述（六）</a><time datetime="2023-04-13T11:31:09.000Z" title="发表于 2023-04-13 19:31:09">2023-04-13</time></div></div></div></div></div></div></main><footer id="footer" style="background: url(/img/Lora.png)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By FrankZxshen</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div></div></body></html>
