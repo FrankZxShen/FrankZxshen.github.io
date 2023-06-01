@@ -125,7 +125,7 @@ TWC（OCRtoken-单词对比学习）的任务，该任务通过计算OCRtoken和
 
 给定一个图像和一个问题，使用预训练的OCR模型和obj检测模型对图像进行预处理，获取图像中的文本和对象。使用单词embedding、字符embedding和OCR模型的置信分数来学习OCRtoken的表示。
 
-本文的自监督任务为OCRtoken对比学习任务，在每一步，模型都会从迭代的解码器中预测答案。具体而言，模型从**图像中的OCR标记**、**增强标记**、**训练数据中的常用词词汇表**。由于OCRtoken不总是正确的，本文假设拼写错误的OCRtoken中的大多数字符是正确的，使用基于字符的单词嵌入。
+本文的自监督任务为OCRtoken对比学习任务，在每一步，模型都会从迭代的解码器中预测答案。具体而言，模型从**图像中的OCR标记**、**增强标记**、**训练数据中的常用词词汇表**选择一个单词。由于OCRtoken不总是正确的，本文假设拼写错误的OCRtoken中的大多数字符是正确的，使用基于字符的单词嵌入。
 
 ![](OCR相关问题/TWA.png)
 
@@ -133,5 +133,62 @@ TWC（OCRtoken-单词对比学习）的任务，该任务通过计算OCRtoken和
 
 1、干扰字典中的一些字符（比如减少cool->col增加and->andy修改。。。）等方法模拟OCR错误，从而增强OCRtoken。
 
-2、
+2、软标签监督OCR标记词对比学习，与其他的预训练任务一起训练。使用迭代解码器进行微调。
 
+3、模型从**图像中的OCR标记**、**增强标记**、**训练数据中的常用词词汇表**选择一个单词，并引入具有字符级语义匹配的指针网络。
+
+### 多模态方法
+
+question->BERT 
+
+物体外观特征、边界框坐标->Faster RCNN
+
+OCR：
+
+视觉特征->$$x_{n}^{vis}$$
+
+边界框坐标->$$x_{n}^{bbox}$$
+
+FastText分类特征->$$x_{n}^{ft}$$
+
+金字塔字符直方图特征->$$x_{n}^{phoc}$$
+
+本文提出的语义表征->$$x^{semantic}$$
+
+OCRtoken嵌入：
+$$
+x_{n}^{ocr}=LN(W_{3}x_{n}^{vis}+W_{4}x_{n}^{phoc}+W_5x_{n}^{ft})+LN(W_6x_{n}^{bbox})+x_n^{semantic}
+$$
+最后那个任务如何实现呢？
+
+输入OCRtoken特征与增强的OCRtoken特征，目标是预测每个（OCRtoken，增强token）是否相关。对于每个对，计算token-to-word和word-to-token的相似性。
+
+### fineturn
+
+这里没啥变化，迭代解码的单词来自以下三种：图像中的OCRtoken、增强的token、训练数据的频繁的anwser词汇表。在解码的每一步，首先输入先前预测的单词进行嵌入，并基于transformer预测下一个anwser的单词
+
+好好好，下一篇
+
+
+
+## Seeing Out of tHe bOx: End-to-End Pre-training for Vision-Language Representation Learning（SOHO）
+
+走出困境：视觉语言表征学习的端到端预训练 
+
+不需要边界框注释？通过促进跨模态的视觉词典（VD）学习全面紧凑的视觉特征。预训练任务掩蔽视觉建模（MVM）
+
+不行，不能用fasterrcnn
+
+
+
+## Large-Scale Adversarial Training for Vision-and-Language Representation Learning 
+
+视觉和语言表征学习的大规模对抗性训练 
+
+两个训练阶段：
+
+1、任务不可知的（不知道啥是VQA）的对抗性预训练；
+
+2、特定任务的对抗性微调
+
+在每个模态的嵌入空间中加入对抗训练，而不是像素和文本标记上的对抗扰动
