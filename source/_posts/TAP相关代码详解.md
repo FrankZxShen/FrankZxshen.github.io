@@ -95,3 +95,19 @@ torch.Size([32, 12, 5100])
 
 4、gt_answer_scores（model_output['scores']）（用于与干扰矩阵的anwer输出计算KL散度）
 
+
+
+### prepared_batch（sample_list）
+
+['question_id', 'image_id', 'image_feature_0', 'image_info_0', 'image_feature_1', 'image_info_1', 'text_mask_label', 'text', 'text_len', 'obj_bbox_coordinates', 'objtext_mask_label', 'obj_text', 'obj_text_len', 'ocrtext_mask_label', 'ocrtag_pollute', 'langtag_pollute', 'objtag_pollute', 'tag_pollute', 'ocr_text', 'ocr_text_len', 'context', 'context_tokens', 'context_tokens_enc', 'context_feature_0', 'context_info_0', 'context_feature_1', 'context_info_1', 'order_vectors', 'ocr_bbox_coordinates', 'overlap', 'overlap_obj', 'overlap_ocr', 'gt_answers_enc', 'targets', 'sampled_idx_seq', 'train_prev_inds', 'train_loss_mask', 'dataset_type', 'dataset_name', 'cmb_text', 'cmb_text_len', 'cmb_text_mask_label', 'dataset_type_', 'dataset_name_']
+
+现在遇到的问题
+
+为什么不能在tap.py中修改？可以 换CPU上执行
+
+
+
+### 主循环
+
+
+
