@@ -109,5 +109,15 @@ torch.Size([32, 12, 5100])
 
 ### 主循环
 
+### batch
+
+['question_id', 'image_id', 'image_feature_0', 'image_info_0', 'image_feature_1', 'image_info_1', 'text_mask_label', 'text', 'text_len', 'obj_bbox_coordinates', 'objtext_mask_label', 'obj_text', 'obj_text_len', 'ocrtext_mask_label', 'ocrtag_pollute', 'langtag_pollute', 'objtag_pollute', 'tag_pollute', 'ocr_text', 'ocr_text_len', 'context', 'context_tokens', 'context_tokens_enc', 'context_feature_0', 'context_info_0', 'context_feature_1', 'context_info_1', 'order_vectors', 'ocr_bbox_coordinates', 'overlap', 'overlap_obj', 'overlap_ocr', 'gt_answers_enc', 'targets', 'sampled_idx_seq', 'train_prev_inds', 'train_loss_mask', 'dataset_type', 'dataset_name', 'cmb_text', 'cmb_text_len', 'cmb_text_mask_label', 'dataset_type_', 'dataset_name_']
+
+#### 大致思路：
+
+首先在外层定义delta，然后将delta作为prepaerd_batch字典的参数传入，在模型内部更新delta
+
+### loss
+
 
 
