@@ -119,5 +119,15 @@ torch.Size([32, 12, 5100])
 
 ### loss
 
+1、第一步
 
+设定两个report，第一个report记录原来没有加入干扰的model_output loss;
+
+​								第二个report_adv记录加入干扰的model_adv_output loss;
+
+2、
+
+nan?????????????
+
+计算完成所有损失后，准备混合精度回溯。
 
