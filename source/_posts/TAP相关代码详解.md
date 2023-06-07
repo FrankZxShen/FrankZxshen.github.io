@@ -129,29 +129,29 @@ torch.Size([32, 12, 5100])
 
 计算完成所有损失后，准备混合精度回溯。
 
-#### 问题
 
-1、出现txt_delta grad为None的问题：对于pytorch 有个概念叶子节点，一般用户自己创建的变量叫叶子节点，而叶子节点经过计算得到的变量叫非叶子节点，叶子节点的梯度值不为none, 非叶子节点的梯度值没有保存在内存中，所以对非叶子节点进行求梯度则为none；（搞错模型了）
 
-2、RuntimeError: Trying to backward through the graph a second time (or directly access saved tensors after they have already been freed). Saved intermediate values of the graph are freed when you call .backward() or autograd.grad(). Specify retain_graph=True if you need to backward through the graph a second time or if you need to access saved tensors after calling backward
+### 目标（6.7-6.10）
 
-这个问题：https://zhuanlan.zhihu.com/p/433407462
+对OCR进行对抗训练
 
-3、RuntimeError: one of the variables needed for gradient computation has been modified by an inplace operation: [torch.cuda.FloatTensor [512, 1]], which is output 0 of AsStridedBackward0, is at version 3; expected version 2 instead. Hint: the backtrace further above shows the operation that failed to compute its gradient. The variable in question was changed in there or anywhere later. Good luck!
 
-我真的会谢。还他妈Good luck
 
-4、overlab维度错误（不知道为什么）
+OCR共有4个特征
 
-5、不收敛（啊？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？）
+1、OCR_fasttext特征
 
-怀疑和opt有关
+2、OCR_PHOC特征
 
-6、损失设置是否合理？建议放到fineturn上
+3、OCR Faster RCNN特征
 
-好好好，建议缩短时间，80h完尼玛
+4、还有一个bbox边框特征
 
-## 算法具体流程
+目标是把这几个特征全部加起来，再加上一个对抗干扰
+
+5、考虑加上OCR纠错（AAAI那个） 看看OCR特征的具体内容
+
+## 算法具体流程（6.8）
 
 1、获取sample
 
