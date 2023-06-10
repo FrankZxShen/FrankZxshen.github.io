@@ -155,7 +155,17 @@ OCR共有4个特征
 
 co-teaching（预训练）
 
+#### 特征
 
+txt_delta [16, 170, 768]
+
+img_delta [16, 100, 2048]
+
+ocr_delta  [16, 100, 2048]
+
+ocr_fasttext_delta [16, 100, 300]
+
+ocr_phoc_delta [16, 100, 604]
 
 ## 算法具体流程（6.10）
 
