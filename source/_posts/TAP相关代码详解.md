@@ -167,6 +167,10 @@ ocr_fasttext_delta [16, 100, 300]
 
 ocr_phoc_delta [16, 100, 604]
 
+不行，效果堪忧（为什么？）
+
+考虑更换去噪网络+colearning
+
 ## 算法具体流程（6.10）
 
 1、获取sample
