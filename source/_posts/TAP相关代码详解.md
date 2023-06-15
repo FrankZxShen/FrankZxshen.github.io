@@ -188,3 +188,5 @@ ocr_phoc_delta [16, 100, 604]
 最后最后（我没办法了）再加入ocr增强（直接加不知道怎么写）
 
 强烈建议把colearing加进去，之后需要colearing
+
+换电脑下载模型，最后加colearing，现在是有效果的
