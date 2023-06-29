@@ -23,6 +23,8 @@ top_img:
 
 这个单独的损失计算方法比我这个简单多了，就是两个cross_entropy
 
+最烦的就是那个kl损失。必须要两个原来的y1和y2（两个预测的label）
+
 ### 新加入一个分支model_output2
 
 对于这个新加入的model_output2，需要一个全新的prepared_batch2存放batch的数据。
@@ -30,4 +32,8 @@ top_img:
 
 
 计算损失时考虑将最后得到的损失放到loss外部，base_trainer做实验（我真的很担心爆显）
+
+loss_pick1：loss
+
+loss_pick2：作为另外一个模型的损失
 
