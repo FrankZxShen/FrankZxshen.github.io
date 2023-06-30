@@ -25,6 +25,10 @@ top_img:
 
 最烦的就是那个kl损失。必须要两个原来的y1和y2（两个预测的label）
 
+改完了，但是爆显
+
+目前损失的计算方法和jocor一致，每个model相当于都是单独训练的。肯定可以提，但是网络结构没法加了
+
 ### 新加入一个分支model_output2
 
 对于这个新加入的model_output2，需要一个全新的prepared_batch2存放batch的数据。
