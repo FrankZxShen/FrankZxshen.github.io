@@ -18,3 +18,17 @@ top_img:
 
 
 ### 3、不知道还加些什么
+
+
+
+### 4、升了一点点
+
+每次修改修改4点：
+
+1、base_trainer_魔改+coteaching（复制）
+
+2、losses_twa_adv_jocor（复制）
+
+3、twa_adv_jocor
+
+4、config（mytwa<->twa）
