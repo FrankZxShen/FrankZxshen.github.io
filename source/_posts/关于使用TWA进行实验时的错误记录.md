@@ -17,7 +17,9 @@ top_img:
 
 
 
-### 3、不知道还加些什么
+### 3、~~不知道还加些什么~~ 加上layoutMv2的一部分
+
+就是把所有token通过一次
 
 
 
@@ -32,3 +34,4 @@ top_img:
 3、twa_adv_jocor
 
 4、config（mytwa<->twa）
+
