@@ -39,3 +39,8 @@ top_img:
 
 4、config（mytwa<->twa）
 
+
+
+### 5、精度很低，怀疑和batchsize有关
+
+改albert
