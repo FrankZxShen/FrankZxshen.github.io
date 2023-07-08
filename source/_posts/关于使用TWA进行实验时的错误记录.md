@@ -44,3 +44,9 @@ top_img:
 ### 5、精度很低，怀疑和batchsize有关
 
 改albert
+
+和学习率有关，albert不重要
+
+
+
+想办法加layout
