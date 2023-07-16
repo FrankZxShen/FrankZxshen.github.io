@@ -65,3 +65,6 @@ top_img:
 
 11号先用训练好的进行fineturn
 
+### 7、我很怀疑是PrevPredEmbeddings的错误
+
+修改为albert 按理说可以降低参数量？
