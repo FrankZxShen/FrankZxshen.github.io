@@ -21,3 +21,6 @@ top_img:
 
 目前仅采用textvqa预训练只有86.6，finetuning还没出来。
 
+不好
+
+重新训练layoutlm

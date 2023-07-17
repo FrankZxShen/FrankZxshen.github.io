@@ -68,3 +68,7 @@ top_img:
 ### 7、我很怀疑是PrevPredEmbeddings的错误
 
 修改为albert 按理说可以降低参数量？
+
+
+
+### 8、基本确定舍弃albert（在多模态transformer中用不了）
