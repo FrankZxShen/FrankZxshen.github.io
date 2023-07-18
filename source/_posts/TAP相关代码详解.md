@@ -190,3 +190,9 @@ ocr_phoc_delta [16, 100, 604]
 强烈建议把colearing加进去，之后需要colearing
 
 换电脑下载模型，最后加colearing，现在是有效果的
+
+
+
+
+
+1
