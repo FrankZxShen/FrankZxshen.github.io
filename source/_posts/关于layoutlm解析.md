@@ -1,5 +1,6 @@
 ---
 title: 关于layoutlm解析
+abbrlink: b91e448e
 date: 2023-07-19 20:35:34
 tags:
 categories:
@@ -136,3 +137,33 @@ class LayoutLMForTokenClassification(nn.Module):
 
 ### roi_align
 
+目标需要获取ocr_fc7的维度和特征，原来的ocr_mmt_in是
+
+```python
+ocr_mmt_in = (
+                self.ocr_feat_layer_norm(
+                    self.linear_ocr_feat_to_mmt_in(ocr_feat)
+                ) + self.ocr_bbox_layer_norm(
+                    self.linear_ocr_bbox_to_mmt_in(ocr_bbox)
+                ) + self.ocr_conf_layer_norm(
+                    self.linear_ocr_conf_to_mmt_in(ocr_conf)
+                )
+            )
+```
+
+其中ocr_feat是
+
+```python
+ocr_feat = torch.cat(
+            [ocr_fasttext, ocr_phoc, ocr_fc7, ocr_order_vectors],
+            dim=-1
+        )
+```
+
+将ocr_fc7给单独提出来作为一个特征，不和其他的特征混合在一起
+
+就是通过一个text_bert(layoutlm)，再和ocr_fc7加起来 作为单独的ocr layoutlm特征放入mmt
+
+
+
+效果看起来还行。。
