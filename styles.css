@@ -1,0 +1,156 @@
+:root {
+  color-scheme: light;
+  --text: #111111;
+  --muted: #555555;
+  --link: #0645ad;
+  --line: #d8d8d8;
+  --page-width: 920px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.page {
+  width: min(var(--page-width), calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 36px;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
+a:focus-visible {
+  outline: 2px solid rgba(6, 69, 173, 0.25);
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 14px;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h2 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+p {
+  margin-bottom: 12px;
+}
+
+hr {
+  height: 1px;
+  margin: 22px 0 20px;
+  border: 0;
+  background: var(--line);
+}
+
+.profile {
+  min-height: 280px;
+}
+
+.portrait {
+  float: right;
+  width: 145px;
+  height: 192px;
+  margin: 0 0 18px 32px;
+  object-fit: cover;
+}
+
+.profile-links {
+  margin-top: 16px;
+  font-weight: 700;
+}
+
+ul {
+  margin: 0;
+  padding-left: 21px;
+}
+
+li {
+  margin-bottom: 8px;
+}
+
+.news-paper {
+  display: block;
+  margin-top: 4px;
+  padding-left: 18px;
+}
+
+.note {
+  color: var(--muted);
+}
+
+.publications {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.publications li {
+  margin-bottom: 14px;
+  padding-left: 2px;
+}
+
+.publications p {
+  margin-bottom: 0;
+}
+
+em {
+  color: #222222;
+}
+
+footer {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+footer p {
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .page {
+    width: min(100% - 24px, var(--page-width));
+    padding-top: 20px;
+  }
+
+  .portrait {
+    float: none;
+    display: block;
+    width: 140px;
+    height: 185px;
+    margin: 0 0 18px;
+  }
+}
